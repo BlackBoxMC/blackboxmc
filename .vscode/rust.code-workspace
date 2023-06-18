@@ -1,0 +1,27 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		},
+		{
+			"path": "../libraries/blackbox-rs"
+		},
+		{
+			"path": "../libraries/spigotjsongen"
+		}
+	],
+	"settings": {
+		"java.compile.nullAnalysis.mode": "automatic",
+		"java.configuration.updateBuildConfiguration": "automatic",
+		"rust-analyzer.linkedProjects": [
+			"./native/Cargo.toml",
+			"./examples/block_break_event/Cargo.toml",
+			"./libraries/blackbox-rs/Cargo.toml",
+			"./Cargo.toml"
+		],
+		"[python]": {
+			"editor.defaultFormatter": "ms-python.autopep8"
+		},
+		"python.formatting.provider": "none"
+	}
+}

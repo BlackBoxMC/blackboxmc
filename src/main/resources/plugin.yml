@@ -1,0 +1,4 @@
+name: BlackBox
+version: '${version}'
+main: net.ioixd.blackbox.BlackBox
+api-version: 1.13
