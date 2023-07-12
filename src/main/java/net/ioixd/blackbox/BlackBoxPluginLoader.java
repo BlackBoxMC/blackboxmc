@@ -1,22 +1,23 @@
 package net.ioixd.blackbox;
 
 import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
+
+import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.InvalidDescriptionException;
-import org.bukkit.plugin.InvalidPluginException;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginLoader;
@@ -31,34 +32,41 @@ import org.jetbrains.annotations.NotNull;
 public final class BlackBoxPluginLoader implements PluginLoader {
     final Server server;
     private HashMap<Plugin, BlackBoxPlugin> libNameMap = new HashMap<>();
-    private final Pattern[] windowsFileFilters = new Pattern[] { Pattern.compile("\\.dll$") };
-    private final Pattern[] macFileFilters = new Pattern[] { Pattern.compile("\\.dylib$") };
-    private final Pattern[] linuxFileFilters = new Pattern[] { Pattern.compile("\\.so$") };
+
+    public static final Pattern[] fileFilters = new Pattern[] { Pattern.compile("^(.*)\\" + getFileExtension() + "$") };
 
     public BlackBoxPluginLoader(@NotNull Server instance) {
         Preconditions.checkArgument(instance != null, "Server cannot be null");
         server = instance;
+        server.getLogger().info("BlackBoxPluginLoader initialized");
     }
 
     @Override
     @NotNull
-    public Plugin loadPlugin(@NotNull final File file) throws InvalidPluginException {
-        server.getLogger().info("Loading " + file.getName());
-        Native.loadPlugin(file.getName());
-        BlackBoxPlugin plugin;
-        try {
-            plugin = new BlackBoxPlugin(file.getName(),
-                    (BlackBox) server.getPluginManager().getPlugin("BlackBox"), this);
-        } catch (IOException e) {
-            server.getLogger().severe(e.getStackTrace().toString());
+    public Plugin loadPlugin(@NotNull final File file) {
+        this.server.getLogger().warning("loadPlugin");
+
+        server.getLogger().info("Loading native plugin " + file.getAbsolutePath());
+
+        Preconditions.checkArgument(file != null, "File cannot be null");
+
+        if (!file.exists()) {
+            server.getLogger().severe(file.getPath() + " does not exist");
             return null;
         }
+
+        Native.loadPlugin(file.getAbsolutePath());
+
+        BlackBoxPlugin plugin = new BlackBoxPlugin(file.getAbsolutePath(),
+                (BlackBox) server.getPluginManager().getPlugin("BlackBox"), this);
         libNameMap.put(plugin, plugin);
+
         return plugin;
     }
 
     @Override
     public void enablePlugin(@NotNull final Plugin plugin) {
+        this.server.getLogger().warning("enablePlugin");
         if (libNameMap.containsKey(plugin)) {
             Native.enablePlugin(libNameMap.get(plugin).getInnerLibraryName());
         } else {
@@ -68,6 +76,7 @@ public final class BlackBoxPluginLoader implements PluginLoader {
 
     @Override
     public void disablePlugin(@NotNull Plugin plugin) {
+        this.server.getLogger().warning("disablePlugin");
         if (libNameMap.containsKey(plugin)) {
             Native.disablePlugin(libNameMap.get(plugin).getInnerLibraryName());
         } else {
@@ -77,27 +86,42 @@ public final class BlackBoxPluginLoader implements PluginLoader {
 
     @Override
     @NotNull
-    public PluginDescriptionFile getPluginDescription(@NotNull File file) throws InvalidDescriptionException {
-        /*
-         * GAME PLAN
-         * library is expected to export some c types under certain names.
-         */
-        return null;
+    public PluginDescriptionFile getPluginDescription(@NotNull File file) {
+        this.server.getLogger().warning("getPluginDescription");
+        if (file == null) {
+            this.server.getLogger().severe("null passed to getPluginDescription");
+            return null;
+        }
+        String str = "name: " + file.getName().replace(getFileExtension(), "") + "\r\n" + //
+                "version: '0.0.0'\r\n" + //
+                "main: net.ioixd.blackbox.BlackBox\r\n" + //
+                "api-version: 1.13\r\n";
+        try {
+            return new PluginDescriptionFile(new ByteArrayInputStream(str.getBytes()));
+        } catch (InvalidDescriptionException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override
     @NotNull
     public Pattern[] getPluginFileFilters() {
+        this.server.getLogger().warning("getPluginFileFilters");
+        return fileFilters;
+    }
+
+    public static String getFileExtension() {
+        System.out.println("getFileExtension");
         String os = System.getProperty("os.name").toLowerCase();
-        server.getLogger().info("OS is " + os);
         if (os.contains("win")) {
-            return windowsFileFilters;
+            return ".so";
         }
         if (os.contains("mac")) {
-            return macFileFilters;
+            return ".dylib";
         }
         if (os.contains("linux") || os.contains("nix")) {
-            return linuxFileFilters;
+            return ".so";
         }
         throw new UnsupportedOperationException("Unknown OS \"" + os + "\"");
     }
@@ -106,6 +130,7 @@ public final class BlackBoxPluginLoader implements PluginLoader {
     @NotNull
     public Map<Class<? extends Event>, Set<RegisteredListener>> createRegisteredListeners(@NotNull Listener listener,
             @NotNull final Plugin plugin) {
+        this.server.getLogger().warning("createRegisteredListeners");
         Preconditions.checkArgument(plugin != null, "Plugin can not be null");
         Preconditions.checkArgument(listener != null, "Listener can not be null");
 
@@ -163,14 +188,7 @@ public final class BlackBoxPluginLoader implements PluginLoader {
                 continue;
             }
             ;
-            if (useTimings) {
-                eventSet.add(
-                        new TimedRegisteredListener(listener, libNameMap.get(plugin)::onEvent, eh.priority(), plugin,
-                                eh.ignoreCancelled()));
-            } else {
-                eventSet.add(new RegisteredListener(listener, libNameMap.get(plugin)::onEvent, eh.priority(), plugin,
-                        eh.ignoreCancelled()));
-            }
+
         }
         return ret;
 

@@ -32,8 +32,6 @@ import org.bukkit.plugin.RegisteredListener;
 
 import com.google.common.base.Charsets;
 
-import io.papermc.paper.plugin.configuration.PluginMeta;
-
 public class BlackBoxPlugin implements Plugin {
     String library;
     BlackBox parent;
@@ -49,45 +47,64 @@ public class BlackBoxPlugin implements Plugin {
     private FileConfiguration newConfig = null;
     private File configFile = null;
 
-    private PluginMeta pluginMeta = null;
+    BlackBoxPluginListener listener;
 
-    RegisteredListener registeredListener = null;
+    public class BlackBoxPluginListener implements Listener {
+        BlackBoxPlugin plugin;
+        RegisteredListener registeredListener;
+        String library;
 
-    BlackBoxPlugin(String library, BlackBox parent, PluginLoader loader) throws IOException {
+        public BlackBoxPluginListener(BlackBoxPlugin plugin, String library) {
+            this.plugin = plugin;
+            this.registeredListener = new RegisteredListener(this, this::onEvent, EventPriority.NORMAL, plugin, false);
+            for (HandlerList handler : HandlerList.getHandlerLists()) {
+                handler.register(this.registeredListener);
+            }
+        }
+
+        public void onEvent(Listener listener, Event event) {
+            // get the event name
+            String name = event.getEventName();
+            String hookName = "__on__" + name;
+            this.plugin.getLogger().info(hookName);
+
+            try {
+                boolean result = Native.libraryHasFunction(library, hookName);
+                if (result == false) {
+                    HandlerList handler = event.getHandlers();
+                    handler.unregister(registeredListener);
+                } else {
+                    Native.sendEvent(library, hookName, event);
+                }
+            } catch (Exception ex) {
+                this.plugin.getLogger().severe(ex.toString());
+            }
+        }
+    }
+
+    BlackBoxPlugin(String library, BlackBox parent, PluginLoader loader) {
         this.library = library;
         this.isEnabled = true;
         this.naggable = true;
         this.parent = parent;
         File pluginsFolder = parent.getDataFolder().getParentFile();
         if (!Paths.get(pluginsFolder.getPath(), library).toFile().exists()) {
-            Paths.get(pluginsFolder.getPath(), library).toFile().createNewFile();
+            pluginsFolder.mkdir();
+            Paths.get(pluginsFolder.getPath(), library).toFile().mkdir();
         }
         this.dataFolder = Paths.get(pluginsFolder.getPath(), library).toFile();
         this.loader = loader;
-
-        this.pluginMeta = new BlackBoxPluginMeta(library);
+        this.file = new File(library);
+        this.listener = new BlackBoxPluginListener(this, this.library);
     }
 
-    public void setRegisteredListener(RegisteredListener registeredListener) {
-        this.registeredListener = registeredListener;
+    public String getInnerLibraryName() {
+        return library;
     }
 
-    public void onEvent(Listener listener, Event event) {
-        // get the event name
-        String name = event.getEventName();
-        String hookName = "__on__" + name;
-
-        try {
-            boolean result = Native.libraryHasFunction(library, hookName);
-            if (result == false) {
-                HandlerList handler = event.getHandlers();
-                handler.unregister(registeredListener);
-            } else {
-                Native.sendEvent(library, hookName, event);
-            }
-        } catch (Exception ex) {
-            this.getLogger().severe(ex.toString());
-        }
+    @Override
+    public String getName() {
+        return library;
     }
 
     Object execNative(String functionName, Object[] objects) {
@@ -105,15 +122,6 @@ public class BlackBoxPlugin implements Plugin {
             // this.disable();
         }
         return null;
-    }
-
-    public String getInnerLibraryName() {
-        return library;
-    }
-
-    @Override
-    public String getName() {
-        return library;
     }
 
     @Override
@@ -287,10 +295,6 @@ public class BlackBoxPlugin implements Plugin {
                 this.getLogger().log(Level.SEVERE, "Could not save " + outFile.getName() + " to " + outFile, ex);
             }
         }
-    }
-
-    public PluginMeta getPluginMeta() {
-        return this.pluginMeta;
     }
 
     @Override
