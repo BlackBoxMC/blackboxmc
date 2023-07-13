@@ -1,4 +1,13 @@
+package net.ioixd.blackbox.extendables;
+
+import java.util.Random;
+
 import org.bukkit.generator.BlockPopulator;
+import org.bukkit.generator.LimitedRegion;
+import org.bukkit.generator.WorldInfo;
+import org.bukkit.plugin.Plugin;
+
+import net.ioixd.blackbox.BlackBox;
 
 public class ExtendableBlockPopulator extends BlockPopulator {
     BlackBox blackBox;
