@@ -1,7 +1,8 @@
 package net.ioixd.blackbox.extendables;
+
 import net.ioixd.blackbox.BlackBox;
-import net.ioixd.blackbox.Native;
 import org.bukkit.plugin.Plugin;
+
 public class ExtendablePlugin implements Plugin {
     public String name;
     public String inLibName;
@@ -14,246 +15,239 @@ public class ExtendablePlugin implements Plugin {
         Misc.throwIfFuncsNotBound(this.inLibName, this.name, this.getClass());
     }
 
-	public org.bukkit.Server getServer() {
-       Object result = null;
-       try {
-           result = Native.execute(this.inLibName, "__extends__Plugin__"+this.name+"__getServer", this.blackBox, new Object[] {});
-       } catch(Exception ex) {
-           ex.printStackTrace();
-           this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
-           this.blackBox.disable();
-       }
-       return (org.bukkit.Server) result;
+    public org.bukkit.Server getServer() {
+        Object result = null;
+        try {
+            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "Plugin", "getServer",
+                    new Object[] {}, true);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return (org.bukkit.Server) result;
     }
-	public org.bukkit.plugin.PluginDescriptionFile getDescription() {
-       Object result = null;
-       try {
-           result = Native.execute(this.inLibName, "__extends__Plugin__"+this.name+"__getDescription", this.blackBox, new Object[] {});
-       } catch(Exception ex) {
-           ex.printStackTrace();
-           this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
-           this.blackBox.disable();
-       }
-       return (org.bukkit.plugin.PluginDescriptionFile) result;
-    }
-	public org.bukkit.generator.BiomeProvider getDefaultBiomeProvider(java.lang.String arg0, java.lang.String arg1) {
-       Object result = null;
-       try {
-           result = Native.execute(this.inLibName, "__extends__Plugin__"+this.name+"__getDefaultBiomeProvider", this.blackBox, new Object[] {
-               arg0, arg1
-           });
-       } catch(Exception ex) {
-           ex.printStackTrace();
-           this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
-           this.blackBox.disable();
-       }
-       return (org.bukkit.generator.BiomeProvider) result;
-    }
-	public boolean isEnabled() {
-       Object result = null;
-       try {
-           result = Native.execute(this.inLibName, "__extends__Plugin__"+this.name+"__isEnabled", this.blackBox, new Object[] {});
-       } catch(Exception ex) {
-           ex.printStackTrace();
-           this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
-           this.blackBox.disable();
-       }
-       return (boolean) result;
-    }
-	public org.bukkit.configuration.file.FileConfiguration getConfig() {
-       Object result = null;
-       try {
-           result = Native.execute(this.inLibName, "__extends__Plugin__"+this.name+"__getConfig", this.blackBox, new Object[] {});
-       } catch(Exception ex) {
-           ex.printStackTrace();
-           this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
-           this.blackBox.disable();
-       }
-       return (org.bukkit.configuration.file.FileConfiguration) result;
-    }
-	public java.io.File getDataFolder() {
-       Object result = null;
-       try {
-           result = Native.execute(this.inLibName, "__extends__Plugin__"+this.name+"__getDataFolder", this.blackBox, new Object[] {
 
-           });
-       } catch(Exception ex) {
-           ex.printStackTrace();
-           this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
-           this.blackBox.disable();
-       }
-       return (java.io.File) result;
+    public org.bukkit.plugin.PluginDescriptionFile getDescription() {
+        Object result = null;
+        try {
+            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "Plugin", "getDescription",
+                    new Object[] {}, true);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return (org.bukkit.plugin.PluginDescriptionFile) result;
     }
-	public void saveConfig() {
-       try {
-           Native.execute(this.inLibName, "__extends__Plugin__"+this.name+"__saveConfig", this.blackBox, new Object[] {});
-       } catch(Exception ex) {
-           ex.printStackTrace();
-           this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
-           this.blackBox.disable();
-       }
+
+    public org.bukkit.generator.BiomeProvider getDefaultBiomeProvider(java.lang.String arg0, java.lang.String arg1) {
+        Object result = null;
+        try {
+            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "Plugin", "getDefaultBiomeProvider",
+                    new Object[] {}, true);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return (org.bukkit.generator.BiomeProvider) result;
     }
-	public void saveDefaultConfig() {
-       try {
-           Native.execute(this.inLibName, "__extends__Plugin__"+this.name+"__saveDefaultConfig", this.blackBox, new Object[] {});
-       } catch(Exception ex) {
-           ex.printStackTrace();
-           this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
-           this.blackBox.disable();
-       }
+
+    public boolean isEnabled() {
+        Object result = null;
+        try {
+            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "Plugin", "isEnabled",
+                    new Object[] {}, true);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return (boolean) result;
     }
-	public void saveResource(java.lang.String arg0, boolean arg1) {
-       try {
-           Native.execute(this.inLibName, "__extends__Plugin__"+this.name+"__saveResource", this.blackBox, new Object[] {
-               arg0, arg1
-           });
-       } catch(Exception ex) {
-           ex.printStackTrace();
-           this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
-           this.blackBox.disable();
-       }
+
+    public org.bukkit.configuration.file.FileConfiguration getConfig() {
+        Object result = null;
+        try {
+            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "Plugin", "getConfig",
+                    new Object[] {}, true);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return (org.bukkit.configuration.file.FileConfiguration) result;
     }
-	public void reloadConfig() {
-       try {
-           Native.execute(this.inLibName, "__extends__Plugin__"+this.name+"__reloadConfig", this.blackBox, new Object[] {});
-       } catch(Exception ex) {
-           ex.printStackTrace();
-           this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
-           this.blackBox.disable();
-       }
+
+    public java.io.File getDataFolder() {
+        Object result = null;
+        try {
+            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "Plugin", "getDataFolder",
+                    new Object[] {}, true);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return (java.io.File) result;
     }
-	public org.bukkit.plugin.PluginLoader getPluginLoader() {
-       Object result = null;
-       try {
-           result = Native.execute(this.inLibName, "__extends__Plugin__"+this.name+"__getPluginLoader", this.blackBox, new Object[] {});
-       } catch(Exception ex) {
-           ex.printStackTrace();
-           this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
-           this.blackBox.disable();
-       }
-       return (org.bukkit.plugin.PluginLoader) result;
+
+    public void saveConfig() {
+        Object result = null;
+        try {
+            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "Plugin", "saveConfig",
+                    new Object[] {}, true);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
-	public void onDisable() {
-       try {
-            Native.execute(this.inLibName, "__extends__Plugin__"+this.name+"__onDisable", this.blackBox, new Object[] {});
-       } catch(Exception ex) {
-           ex.printStackTrace();
-           this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
-           this.blackBox.disable();
-       }
+
+    public void saveDefaultConfig() {
+        Object result = null;
+        try {
+            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "Plugin", "saveDefaultConfig",
+                    new Object[] {}, true);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
-	public void onLoad() {
-       try {
-           Native.execute(this.inLibName, "__extends__Plugin__"+this.name+"__onLoad", this.blackBox, new Object[] {});
-       } catch(Exception ex) {
-           ex.printStackTrace();
-           this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
-           this.blackBox.disable();
-       }
+
+    public void saveResource(java.lang.String arg0, boolean arg1) {
+        Object result = null;
+        try {
+            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "Plugin", "saveResource",
+                    new Object[] {}, true);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
-	public void onEnable() {
-       try {
-           Native.execute(this.inLibName, "__extends__Plugin__"+this.name+"__onEnable", this.blackBox, new Object[] {});
-       } catch(Exception ex) {
-           ex.printStackTrace();
-           this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
-           this.blackBox.disable();
-       }
+
+    public void reloadConfig() {
+        Object result = null;
+        try {
+            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "Plugin", "reloadConfig",
+                    new Object[] {}, true);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
-	public boolean isNaggable() {
-       Object result = null;
-       try {
-           result = Native.execute(this.inLibName, "__extends__Plugin__"+this.name+"__isNaggable", this.blackBox, new Object[] {});
-       } catch(Exception ex) {
-           ex.printStackTrace();
-           this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
-           this.blackBox.disable();
-       }
-       return (boolean) result;
+
+    public org.bukkit.plugin.PluginLoader getPluginLoader() {
+        Object result = null;
+        try {
+            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "Plugin", "getPluginLoader",
+                    new Object[] {}, true);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return (org.bukkit.plugin.PluginLoader) result;
     }
-	public void setNaggable(boolean arg0) {
-       try {
-           Native.execute(this.inLibName, "__extends__Plugin__"+this.name+"__setNaggable", this.blackBox, new Object[] {
-               arg0
-           });
-       } catch(Exception ex) {
-           ex.printStackTrace();
-           this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
-           this.blackBox.disable();
-       }
+
+    public void onDisable() {
+        Object result = null;
+        try {
+            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "Plugin", "onDisable",
+                    new Object[] {}, true);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
-	public org.bukkit.generator.ChunkGenerator getDefaultWorldGenerator(java.lang.String arg0, java.lang.String arg1) {
-       Object result = null;
-       try {
-           result = Native.execute(this.inLibName, "__extends__Plugin__"+this.name+"__getDefaultWorldGenerator", this.blackBox, new Object[] {
-               arg0, arg1
-           });
-       } catch(Exception ex) {
-           ex.printStackTrace();
-           this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
-           this.blackBox.disable();
-       }
-       return (org.bukkit.generator.ChunkGenerator) result;
+
+    public void onLoad() {
+        Object result = null;
+        try {
+            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "Plugin", "onLoad",
+                    new Object[] {}, true);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
-	public java.lang.String getName() {
-       Object result = null;
-       try {
-           result = Native.execute(this.inLibName, "__extends__Plugin__"+this.name+"__getName", this.blackBox, new Object[] { });
-       } catch(Exception ex) {
-           ex.printStackTrace();
-           this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
-           this.blackBox.disable();
-       }
-       return (java.lang.String) result;
+
+    public void onEnable() {
+        Object result = null;
+        try {
+            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "Plugin", "onEnable",
+                    new Object[] {}, true);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
-	public java.io.InputStream getResource(java.lang.String arg0) {
-       Object result = null;
-       try {
-           result = Native.execute(this.inLibName, "__extends__Plugin__"+this.name+"__getResource", this.blackBox, new Object[] {
-               arg0
-           });
-       } catch(Exception ex) {
-           ex.printStackTrace();
-           this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
-           this.blackBox.disable();
-       }
-       return (java.io.InputStream) result;
+
+    public boolean isNaggable() {
+        Object result = null;
+        try {
+            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "Plugin", "isNaggable",
+                    new Object[] {}, true);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return (boolean) result;
     }
-	public java.util.logging.Logger getLogger() {
-       Object result = null;
-       try {
-           result = Native.execute(this.inLibName, "__extends__Plugin__"+this.name+"__getLogger", this.blackBox, new Object[] {});
-       } catch(Exception ex) {
-           ex.printStackTrace();
-           this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
-           this.blackBox.disable();
-       }
-       return (java.util.logging.Logger) result;
+
+    public void setNaggable(boolean arg0) {
+        Object result = null;
+        try {
+            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "Plugin", "setNaggable",
+                    new Object[] { arg0 }, true);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
-	public java.util.List<java.lang.String> onTabComplete(org.bukkit.command.CommandSender arg0, org.bukkit.command.Command arg1, java.lang.String arg2, java.lang.String[] arg3) {
-       Object result = null;
-       try {
-           result = Native.execute(this.inLibName, "__extends__Plugin__"+this.name+"__onTabComplete", this.blackBox, new Object[] {
-               arg0, arg1, arg2, arg3
-           });
-       } catch(Exception ex) {
-           ex.printStackTrace();
-           this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
-           this.blackBox.disable();
-       }
-       return (java.util.List<java.lang.String>) result;
+
+    public org.bukkit.generator.ChunkGenerator getDefaultWorldGenerator(java.lang.String arg0, java.lang.String arg1) {
+        Object result = null;
+        try {
+            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "Plugin", "getDefaultWorldGenerator",
+                    new Object[] { arg0, arg1 }, true);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return (org.bukkit.generator.ChunkGenerator) result;
     }
-	public boolean onCommand(org.bukkit.command.CommandSender arg0, org.bukkit.command.Command arg1, java.lang.String arg2, java.lang.String[] arg3) {
-       Object result = null;
-       try {
-           result = Native.execute(this.inLibName, "__extends__Plugin__"+this.name+"__onCommand", this.blackBox, new Object[] {
-               arg0, arg1, arg2, arg3
-           });
-       } catch(Exception ex) {
-           ex.printStackTrace();
-           this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
-           this.blackBox.disable();
-       }
-       return (boolean) result;
+
+    public java.lang.String getName() {
+        Object result = null;
+        try {
+            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "Plugin", "getName",
+                    new Object[] {}, true);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return (java.lang.String) result;
+    }
+
+    public java.io.InputStream getResource(java.lang.String arg0) {
+        Object result = null;
+        try {
+            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "Plugin", "getResource",
+                    new Object[] { arg0 }, true);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return (java.io.InputStream) result;
+    }
+
+    public java.util.logging.Logger getLogger() {
+        Object result = null;
+        try {
+            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "Plugin", "getLogger",
+                    new Object[] {}, true);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return (java.util.logging.Logger) result;
+    }
+
+    public java.util.List<java.lang.String> onTabComplete(org.bukkit.command.CommandSender arg0,
+            org.bukkit.command.Command arg1, java.lang.String arg2, java.lang.String[] arg3) {
+        Object result = null;
+        try {
+            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "Plugin", "onTabComplete",
+                    new Object[] { arg0, arg1, arg2, arg3 }, true);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return (java.util.List<java.lang.String>) result;
+    }
+
+    public boolean onCommand(org.bukkit.command.CommandSender arg0, org.bukkit.command.Command arg1,
+            java.lang.String arg2, java.lang.String[] arg3) {
+        Object result = null;
+        try {
+            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "onCommand", "onCommand",
+                    new Object[] { arg0, arg1, arg2, arg3 }, true);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return (boolean) result;
     }
 }
