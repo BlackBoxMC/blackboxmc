@@ -26,4 +26,5 @@ public class ExtendableHelpTopicFactory implements HelpTopicFactory {
         }
         return (org.bukkit.help.HelpTopic) result;
     }
+
 }

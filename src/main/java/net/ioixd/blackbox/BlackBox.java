@@ -22,14 +22,13 @@ import java.util.regex.Pattern;
 
 public final class BlackBox extends JavaPlugin {
     PluginManager pm = null;
+    boolean isPaper = false;
+    FallbackPluginLoader fallbackLoader = null;
 
     private ArrayList<BlackBoxPlugin> plugins = new ArrayList<>();
 
     @Override
     public void onLoad() {
-        pm = Bukkit.getServer().getPluginManager();
-        pm.registerInterface(BlackBoxPluginLoader.class);
-
         // extract the .dll or .so from the .jar into the plugins folder and run it.
         // i do not care if this is the wrong way. i have spent so fucking long trying
         // to do it
@@ -65,23 +64,34 @@ public final class BlackBox extends JavaPlugin {
 
         System.load(file.getAbsolutePath());
 
-        for (File f : this.getFile().getParentFile().listFiles()) {
-            for (Pattern filter : BlackBoxPluginLoader.fileFilters) {
-                Matcher match = filter.matcher(f.getAbsolutePath());
-                if (!match.find()) {
-                    continue;
-                }
-                try {
-                    BlackBoxPlugin p = (BlackBoxPlugin) pm.loadPlugin(f);
-                    if (p != null) {
-                        plugins.add(p);
+        try {
+            Class.forName("com.destroystokyo.paper.ParticleBuilder");
+            isPaper = true;
+        } catch (ClassNotFoundException ignored) {
+        }
+
+        if (!isPaper) {
+            pm = Bukkit.getServer().getPluginManager();
+            pm.registerInterface(BlackBoxPluginLoader.class);
+
+            for (File f : this.getFile().getParentFile().listFiles()) {
+                for (Pattern filter : BlackBoxPluginLoader.fileFilters) {
+                    Matcher match = filter.matcher(f.getAbsolutePath());
+                    if (!match.find()) {
+                        continue;
                     }
-                } catch (InvalidPluginException e) {
-                    e.printStackTrace();
-                } catch (InvalidDescriptionException e) {
-                    e.printStackTrace();
-                } catch (UnknownDependencyException e) {
-                    e.printStackTrace();
+                    try {
+                        BlackBoxPlugin p = (BlackBoxPlugin) pm.loadPlugin(f);
+                        if (p != null) {
+                            plugins.add(p);
+                        }
+                    } catch (InvalidPluginException e) {
+                        e.printStackTrace();
+                    } catch (InvalidDescriptionException e) {
+                        e.printStackTrace();
+                    } catch (UnknownDependencyException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
@@ -97,12 +107,19 @@ public final class BlackBox extends JavaPlugin {
         info.forEach(cls -> {
             cls.loadClass(true);
         });
-        for (BlackBoxPlugin p : plugins) {
-            if (p == null) {
-                continue;
+        if (isPaper) {
+            getLogger().warning(
+                    "\nYou are running under Paper. By doing so, you are locked out of many advanced functions, and as of writing, you are restricted from making custom commands. More info here: https://github.com/BlackBoxMC/blackbox/wiki/Paper-incompatibility-notes\n\n");
+            fallbackLoader = new FallbackPluginLoader(this);
+        } else {
+            for (BlackBoxPlugin p : plugins) {
+                if (p == null) {
+                    continue;
+                }
+                p.updateEventListeners();
             }
-            p.updateEventListeners();
         }
+
     }
 
     @Override

@@ -47,7 +47,7 @@ public class BlackBoxPlugin implements Plugin {
     private FileConfiguration newConfig = null;
     private File configFile = null;
 
-    BlackBoxPluginListener listener;
+    public BlackBoxPluginListener listener;
 
     public class BlackBoxPluginListener implements Listener {
         BlackBoxPlugin plugin;
@@ -67,8 +67,6 @@ public class BlackBoxPlugin implements Plugin {
             // get the event name
             String name = event.getEventName();
             String hookName = "__on__" + name;
-            System.out.println(this.library + ", " + hookName);
-
             try {
                 boolean result = Native.libraryHasFunction(library, hookName);
                 if (result == false) {
@@ -116,7 +114,6 @@ public class BlackBoxPlugin implements Plugin {
         try {
             boolean hasFunc = Native.libraryHasFunction(library, functionName);
             if (hasFunc) {
-                System.out.println(this.library);
                 return Native.execute(this.library, "__" + functionName, this, objects);
             } else {
                 // default
@@ -127,7 +124,6 @@ public class BlackBoxPlugin implements Plugin {
             // this.getLogger().severe("Disabling self");
             // this.disable();
         }
-        this.getLogger().info(library + ", " + functionName);
         return null;
     }
 

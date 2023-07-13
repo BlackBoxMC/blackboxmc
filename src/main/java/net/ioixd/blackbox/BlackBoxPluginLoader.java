@@ -7,23 +7,21 @@ import java.io.File;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
+
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.InvalidDescriptionException;
+import org.bukkit.plugin.InvalidPluginException;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginLoader;
 import org.bukkit.plugin.RegisteredListener;
-import org.bukkit.plugin.TimedRegisteredListener;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -44,11 +42,7 @@ public final class BlackBoxPluginLoader implements PluginLoader {
 
     @Override
     @NotNull
-    public Plugin loadPlugin(@NotNull final File file) {
-        return loadPlugin(file, null);
-    }
-
-    public Plugin loadPlugin(@NotNull final File file, List<BlackBoxPlugin> returnedPlugins) {
+    public Plugin loadPlugin(@NotNull final File file) throws InvalidPluginException {
         String library = file.getAbsolutePath();
 
         String[] parts = library.split(File.separator);
@@ -70,11 +64,6 @@ public final class BlackBoxPluginLoader implements PluginLoader {
         BlackBoxPlugin plugin = new BlackBoxPlugin(libraryName,
                 (BlackBox) server.getPluginManager().getPlugin("BlackBox"), this);
         libNameMap.put(plugin, plugin);
-        if (returnedPlugins != null) {
-            returnedPlugins.add(plugin);
-        }
-
-        System.out.println("Returning " + plugin.toString());
         return plugin;
     }
 

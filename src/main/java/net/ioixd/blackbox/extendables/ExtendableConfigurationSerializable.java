@@ -26,4 +26,5 @@ public class ExtendableConfigurationSerializable implements ConfigurationSeriali
         }
         return (java.util.Map<java.lang.String, java.lang.Object>) result;
     }
+
 }

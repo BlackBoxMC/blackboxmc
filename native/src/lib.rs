@@ -10,9 +10,6 @@ impl SwitchableLibrary {
             enabled: Mutex::new(enabled),
         }
     }
-    fn enabled(&self) -> bool {
-        self.enabled.lock().clone()
-    }
     fn library(&self) -> MutexGuard<Library> {
         self.library.lock()
     }
@@ -35,10 +32,6 @@ impl LibraryManager {
         let libs = &mut self.loaded_libraries.lock();
         libs.insert(libname, SwitchableLibrary::new(lib.0, lib.1));
     }
-    fn set_enabled(&mut self, file: String, enabled: bool) {
-        let libs = &mut self.loaded_libraries.lock();
-        libs.get(&file).unwrap().set_enabled(enabled);
-    }
 }
 
 static mut LIBRARY_MANAGER: Lazy<LibraryManager> = Lazy::new(|| LibraryManager::new());
@@ -52,7 +45,7 @@ use libloading::Library;
 use once_cell::sync::Lazy;
 use parking_lot::{Mutex, MutexGuard};
 
-use std::{collections::HashMap, error::Error, fmt::Display, fs, path::Path};
+use std::{collections::HashMap, error::Error, fmt::Display};
 
 #[no_mangle]
 pub extern "system" fn Java_net_ioixd_blackbox_Native_loadPlugin<'a>(
@@ -106,7 +99,7 @@ pub extern "system" fn Java_net_ioixd_blackbox_Native_enablePlugin<'a>(
         .to_string_lossy()
         .to_string();
     unsafe {
-        let map = LIBRARY_MANAGER
+        LIBRARY_MANAGER
             .loaded_libraries
             .lock()
             .get(&file)
@@ -127,7 +120,7 @@ pub extern "system" fn Java_net_ioixd_blackbox_Native_disablePlugin<'a>(
         .to_string_lossy()
         .to_string();
     unsafe {
-        let map = LIBRARY_MANAGER
+        LIBRARY_MANAGER
             .loaded_libraries
             .lock()
             .get(&file)
@@ -179,10 +172,10 @@ pub extern "system" fn Java_net_ioixd_blackbox_Native_libraryHasFunction<'a>(
     > = unsafe { lib.get(funcname.as_bytes()) };
     if let Err(e) = &func {
         match e {
-            libloading::Error::DlSym { desc: d } => {
+            libloading::Error::DlSym { desc: _ } => {
                 return false.into();
             }
-            libloading::Error::GetProcAddress { source: s } => {
+            libloading::Error::GetProcAddress { source: _ } => {
                 return false.into();
             }
             _ => {

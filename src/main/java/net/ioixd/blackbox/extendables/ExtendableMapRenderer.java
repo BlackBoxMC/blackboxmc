@@ -2,6 +2,7 @@ package net.ioixd.blackbox.extendables;
 
 import net.ioixd.blackbox.BlackBox;
 import org.bukkit.map.MapRenderer;
+import org.bukkit.map.MapView;
 import org.bukkit.plugin.Plugin;
 
 public class ExtendableMapRenderer extends MapRenderer {
@@ -24,4 +25,19 @@ public class ExtendableMapRenderer extends MapRenderer {
             ex.printStackTrace();
         }
     }
+
+    @Override
+    public void initialize(MapView arg0) {
+        Object result = null;
+        try {
+            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "MapRenderer", "initialize",
+                    new Object[] { arg0 }, false);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        if (result == null) {
+            super.initialize(arg0);
+        }
+    }
+
 }

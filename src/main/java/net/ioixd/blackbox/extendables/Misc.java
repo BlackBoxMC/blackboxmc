@@ -29,7 +29,7 @@ public class Misc {
     public static Object tryExecute(Plugin plugin, String libName, String className, String extendsName,
             String funcName,
             Object[] objects, boolean mustExecute) throws Exception {
-        String fullFuncName = "__extends__" + extendsName + "__" + extendsName + "__" + funcName;
+        String fullFuncName = "__extends__" + extendsName + "__" + className + "__" + funcName;
         boolean has = Native.libraryHasFunction(libName, fullFuncName);
         if (has == false) {
             if (mustExecute) {

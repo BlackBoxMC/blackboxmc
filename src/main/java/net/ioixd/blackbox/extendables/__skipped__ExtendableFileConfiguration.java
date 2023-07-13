@@ -4,12 +4,12 @@ import net.ioixd.blackbox.BlackBox;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
 
-public class ExtendableFileConfiguration extends FileConfiguration {
+public class __skipped__ExtendableFileConfiguration extends FileConfiguration {
     public String name;
     public String inLibName;
     public BlackBox blackBox;
 
-    ExtendableFileConfiguration(Plugin blackBox, String name, String inLibName) {
+    __skipped__ExtendableFileConfiguration(Plugin blackBox, String name, String inLibName) {
         this.blackBox = (BlackBox) blackBox;
         this.name = name;
         this.inLibName = inLibName;
