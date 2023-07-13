@@ -16,11 +16,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public final class BlackBox extends JavaPlugin {
     PluginManager pm = null;
+
+    private ArrayList<BlackBoxPlugin> plugins = new ArrayList<>();
 
     @Override
     public void onLoad() {
@@ -68,9 +71,11 @@ public final class BlackBox extends JavaPlugin {
                 if (!match.find()) {
                     continue;
                 }
-
                 try {
-                    pm.loadPlugin(f);
+                    BlackBoxPlugin p = (BlackBoxPlugin) pm.loadPlugin(f);
+                    if (p != null) {
+                        plugins.add(p);
+                    }
                 } catch (InvalidPluginException e) {
                     e.printStackTrace();
                 } catch (InvalidDescriptionException e) {
@@ -90,8 +95,14 @@ public final class BlackBox extends JavaPlugin {
         clsgraph.initializeLoadedClasses();
         ClassInfoList info = clsgraph.scan().getSubclasses(Event.class.getName());
         info.forEach(cls -> {
-            cls.loadClass();
+            cls.loadClass(true);
         });
+        for (BlackBoxPlugin p : plugins) {
+            if (p == null) {
+                continue;
+            }
+            p.updateEventListeners();
+        }
     }
 
     @Override

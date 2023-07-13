@@ -72,7 +72,25 @@ pub extern "system" fn Java_net_ioixd_blackbox_Native_loadPlugin<'a>(
             return;
         }
         let lib = lib.unwrap();
-        LIBRARY_MANAGER.push_lib(file, (lib, true));
+        let parts = file
+            .split(std::path::MAIN_SEPARATOR)
+            .map(|f| f.to_string())
+            .collect::<Vec<String>>();
+        let mut name = parts.get(parts.len() - 1).unwrap().clone();
+        #[cfg(target_os = "windows")]
+        {
+            name = name.replace(".dll", "");
+        }
+        #[cfg(target_os = "macos")]
+        {
+            name = name.replace(".dylib", "");
+        }
+        #[cfg(target_os = "linux")]
+        {
+            name = name.replace(".so", "");
+        }
+        println!("{}", name);
+        LIBRARY_MANAGER.push_lib(name, (lib, true));
     }
 }
 
@@ -144,19 +162,17 @@ pub extern "system" fn Java_net_ioixd_blackbox_Native_libraryHasFunction<'a>(
     libname_raw: JString,
     funcname_raw: JString,
 ) -> jboolean {
-    let libname = &env
-        .get_string(&libname_raw)
-        .unwrap()
+    let libname_raw = env.get_string(&libname_raw);
+    let libname = unwrap_result_or_java_error(&mut env, "unknown library", libname_raw)
         .to_string_lossy()
         .to_string();
-    let funcname = &env
-        .get_string(&funcname_raw)
-        .unwrap()
+    let funcname_raw = env.get_string(&funcname_raw);
+    let funcname = unwrap_result_or_java_error(&mut env, &libname, funcname_raw)
         .to_string_lossy()
         .to_string();
 
     let manager = unsafe { LIBRARY_MANAGER.loaded_libraries.lock() };
-    let lib = manager.get(libname).unwrap().library();
+    let lib = manager.get(&libname).unwrap().library();
     let func: Result<
         libloading::Symbol<unsafe extern "C" fn(JNIEnv<'_>, JObject<'_>)>,
         libloading::Error,
@@ -245,8 +261,13 @@ pub extern "system" fn Java_net_ioixd_blackbox_Native_execute<'a>(
         .to_string();
 
     let manager = unsafe { LIBRARY_MANAGER.loaded_libraries.lock() };
-    let lib =
-        unwrap_option_or_java_error(&mut env, &libname, &libname, manager.get(&libname)).library();
+    let lib = unwrap_option_or_java_error(
+        &mut env,
+        &libname,
+        &format!("manager.get({})", &libname),
+        manager.get(&libname),
+    )
+    .library();
     let func: Result<
         libloading::Symbol<extern "C" fn(JNIEnv<'_>, JObject<'_>) -> JObject<'a>>,
         libloading::Error,
@@ -277,7 +298,7 @@ where
             throw_with_error(
                 &mut env,
                 "net/ioixd/blackbox/exceptions/NativeLibrarySymbolLoadException",
-                format!("error loading {}: {:?}", &libname, err),
+                format!("error with {}: {:?}", &libname, err),
             );
             unreachable!();
         }
@@ -299,7 +320,7 @@ where
             throw_with_error(
                 &mut env,
                 "net/ioixd/blackbox/exceptions/NativeLibrarySymbolLoadException",
-                format!("error loading {}: {} is None", &libname, valname),
+                format!("error with {}: {} is None", &libname, valname),
             );
             unreachable!();
         }

@@ -7,6 +7,7 @@ import java.io.File;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -44,29 +45,41 @@ public final class BlackBoxPluginLoader implements PluginLoader {
     @Override
     @NotNull
     public Plugin loadPlugin(@NotNull final File file) {
-        this.server.getLogger().warning("loadPlugin");
+        return loadPlugin(file, null);
+    }
 
-        server.getLogger().info("Loading native plugin " + file.getAbsolutePath());
+    public Plugin loadPlugin(@NotNull final File file, List<BlackBoxPlugin> returnedPlugins) {
+        String library = file.getAbsolutePath();
+
+        String[] parts = library.split(File.separator);
+        String libraryName = parts[parts.length - 1].replace(BlackBoxPluginLoader.getFileExtension(), "").replace("-",
+                "_");
+        ;
 
         Preconditions.checkArgument(file != null, "File cannot be null");
 
         if (!file.exists()) {
-            server.getLogger().severe(file.getPath() + " does not exist");
+            server.getLogger().severe(file.getAbsolutePath() + " does not exist");
             return null;
         }
 
-        Native.loadPlugin(file.getAbsolutePath());
+        Native.loadPlugin(library);
 
-        BlackBoxPlugin plugin = new BlackBoxPlugin(file.getAbsolutePath(),
+        server.getLogger().info("Loading native plugin " + libraryName);
+
+        BlackBoxPlugin plugin = new BlackBoxPlugin(libraryName,
                 (BlackBox) server.getPluginManager().getPlugin("BlackBox"), this);
         libNameMap.put(plugin, plugin);
+        if (returnedPlugins != null) {
+            returnedPlugins.add(plugin);
+        }
 
+        System.out.println("Returning " + plugin.toString());
         return plugin;
     }
 
     @Override
     public void enablePlugin(@NotNull final Plugin plugin) {
-        this.server.getLogger().warning("enablePlugin");
         if (libNameMap.containsKey(plugin)) {
             Native.enablePlugin(libNameMap.get(plugin).getInnerLibraryName());
         } else {
@@ -76,7 +89,6 @@ public final class BlackBoxPluginLoader implements PluginLoader {
 
     @Override
     public void disablePlugin(@NotNull Plugin plugin) {
-        this.server.getLogger().warning("disablePlugin");
         if (libNameMap.containsKey(plugin)) {
             Native.disablePlugin(libNameMap.get(plugin).getInnerLibraryName());
         } else {
@@ -87,7 +99,6 @@ public final class BlackBoxPluginLoader implements PluginLoader {
     @Override
     @NotNull
     public PluginDescriptionFile getPluginDescription(@NotNull File file) {
-        this.server.getLogger().warning("getPluginDescription");
         if (file == null) {
             this.server.getLogger().severe("null passed to getPluginDescription");
             return null;
@@ -107,12 +118,10 @@ public final class BlackBoxPluginLoader implements PluginLoader {
     @Override
     @NotNull
     public Pattern[] getPluginFileFilters() {
-        this.server.getLogger().warning("getPluginFileFilters");
         return fileFilters;
     }
 
     public static String getFileExtension() {
-        System.out.println("getFileExtension");
         String os = System.getProperty("os.name").toLowerCase();
         if (os.contains("win")) {
             return ".so";
@@ -130,7 +139,6 @@ public final class BlackBoxPluginLoader implements PluginLoader {
     @NotNull
     public Map<Class<? extends Event>, Set<RegisteredListener>> createRegisteredListeners(@NotNull Listener listener,
             @NotNull final Plugin plugin) {
-        this.server.getLogger().warning("createRegisteredListeners");
         Preconditions.checkArgument(plugin != null, "Plugin can not be null");
         Preconditions.checkArgument(listener != null, "Listener can not be null");
 

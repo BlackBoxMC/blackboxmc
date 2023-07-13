@@ -56,6 +56,7 @@ public class BlackBoxPlugin implements Plugin {
 
         public BlackBoxPluginListener(BlackBoxPlugin plugin, String library) {
             this.plugin = plugin;
+            this.library = library;
             this.registeredListener = new RegisteredListener(this, this::onEvent, EventPriority.NORMAL, plugin, false);
             for (HandlerList handler : HandlerList.getHandlerLists()) {
                 handler.register(this.registeredListener);
@@ -66,7 +67,7 @@ public class BlackBoxPlugin implements Plugin {
             // get the event name
             String name = event.getEventName();
             String hookName = "__on__" + name;
-            this.plugin.getLogger().info(hookName);
+            System.out.println(this.library + ", " + hookName);
 
             try {
                 boolean result = Native.libraryHasFunction(library, hookName);
@@ -84,17 +85,21 @@ public class BlackBoxPlugin implements Plugin {
 
     BlackBoxPlugin(String library, BlackBox parent, PluginLoader loader) {
         this.library = library;
+        this.listener = new BlackBoxPluginListener(this, this.library);
         this.isEnabled = true;
         this.naggable = true;
         this.parent = parent;
         File pluginsFolder = parent.getDataFolder().getParentFile();
-        if (!Paths.get(pluginsFolder.getPath(), library).toFile().exists()) {
+        if (!Paths.get(pluginsFolder.getPath(), this.library).toFile().exists()) {
             pluginsFolder.mkdir();
-            Paths.get(pluginsFolder.getPath(), library).toFile().mkdir();
+            Paths.get(pluginsFolder.getPath(), this.library).toFile().mkdir();
         }
-        this.dataFolder = Paths.get(pluginsFolder.getPath(), library).toFile();
+        this.dataFolder = Paths.get(pluginsFolder.getPath(), this.library).toFile();
         this.loader = loader;
-        this.file = new File(library);
+        this.file = new File(this.library);
+    }
+
+    public void updateEventListeners() {
         this.listener = new BlackBoxPluginListener(this, this.library);
     }
 
@@ -109,9 +114,10 @@ public class BlackBoxPlugin implements Plugin {
 
     Object execNative(String functionName, Object[] objects) {
         try {
-            boolean hasFunc = Native.libraryHasFunction(library, "getConfig");
+            boolean hasFunc = Native.libraryHasFunction(library, functionName);
             if (hasFunc) {
-                return Native.execute(this.library, "__getConfig", this, objects);
+                System.out.println(this.library);
+                return Native.execute(this.library, "__" + functionName, this, objects);
             } else {
                 // default
                 return null;
@@ -121,6 +127,7 @@ public class BlackBoxPlugin implements Plugin {
             // this.getLogger().severe("Disabling self");
             // this.disable();
         }
+        this.getLogger().info(library + ", " + functionName);
         return null;
     }
 
