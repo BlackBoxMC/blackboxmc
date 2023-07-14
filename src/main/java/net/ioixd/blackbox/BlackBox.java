@@ -82,9 +82,7 @@ public final class BlackBox extends JavaPlugin {
                     }
                     try {
                         BlackBoxPlugin p = (BlackBoxPlugin) pm.loadPlugin(f);
-                        if (p != null) {
-                            plugins.add(p);
-                        }
+                        plugins.add(p);
                     } catch (InvalidPluginException e) {
                         e.printStackTrace();
                     } catch (InvalidDescriptionException e) {
@@ -105,6 +103,7 @@ public final class BlackBox extends JavaPlugin {
         clsgraph.initializeLoadedClasses();
         ClassInfoList info = clsgraph.scan().getSubclasses(Event.class.getName());
         info.forEach(cls -> {
+            System.out.println(cls.getName());
             cls.loadClass(true);
         });
         if (isPaper) {

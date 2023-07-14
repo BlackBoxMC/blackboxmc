@@ -5,12 +5,8 @@ import java.util.Random;
 import org.bukkit.generator.BlockPopulator;
 import org.bukkit.generator.LimitedRegion;
 import org.bukkit.generator.WorldInfo;
-import org.bukkit.plugin.Plugin;
-
-import net.ioixd.blackbox.BlackBox;
 
 public class ExtendableBlockPopulator extends BlockPopulator {
-    BlackBox blackBox;
     String inLibName;
     String name;
 
@@ -18,7 +14,7 @@ public class ExtendableBlockPopulator extends BlockPopulator {
     public void populate(WorldInfo worldInfo, Random random, int chunkX, int chunkZ, LimitedRegion limitedRegion) {
         Object result = null;
         try {
-            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "BlockPopulator", "populate",
+            result = Misc.tryExecute(this.inLibName, this.name, "BlockPopulator", "populate",
                     new Object[] {
                             worldInfo, random, chunkX, chunkZ, limitedRegion
                     }, false);
@@ -30,8 +26,8 @@ public class ExtendableBlockPopulator extends BlockPopulator {
         }
     }
 
-    ExtendableBlockPopulator(Plugin blackBox, String name, String inLibName) {
-        this.blackBox = (BlackBox) blackBox;
+    ExtendableBlockPopulator(String name, String inLibName) {
+
         this.name = name;
         this.inLibName = inLibName;
     }

@@ -1,18 +1,15 @@
 package net.ioixd.blackbox.extendables;
 
-import net.ioixd.blackbox.BlackBox;
 import net.ioixd.blackbox.exceptions.MissingFunctionException;
 
 import org.bukkit.generator.BiomeProvider;
-import org.bukkit.plugin.Plugin;
 
 public class ExtendableBiomeProvider extends BiomeProvider {
     public String name;
     public String inLibName;
-    public BlackBox blackBox;
 
-    ExtendableBiomeProvider(Plugin blackBox, String name, String inLibName) throws MissingFunctionException {
-        this.blackBox = (BlackBox) blackBox;
+    ExtendableBiomeProvider(String name, String inLibName) throws MissingFunctionException {
+
         this.name = name;
         this.inLibName = inLibName;
         Misc.throwIfFuncsNotBound(this.inLibName, this.name, this.getClass());
@@ -21,7 +18,7 @@ public class ExtendableBiomeProvider extends BiomeProvider {
     public org.bukkit.block.Biome getBiome(org.bukkit.generator.WorldInfo arg0, int arg1, int arg2, int arg3) {
         Object result = null;
         try {
-            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "BiomeProvider", "getBiome",
+            result = Misc.tryExecute(this.inLibName, this.name, "BiomeProvider", "getBiome",
                     new Object[] {
                             arg0, arg1, arg2, arg3
                     }, true);
@@ -34,7 +31,7 @@ public class ExtendableBiomeProvider extends BiomeProvider {
     public java.util.List<org.bukkit.block.Biome> getBiomes(org.bukkit.generator.WorldInfo arg0) {
         Object result = null;
         try {
-            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "BiomeProvider", "getBiomes",
+            result = Misc.tryExecute(this.inLibName, this.name, "BiomeProvider", "getBiomes",
                     new Object[] {
                             arg0
                     }, true);

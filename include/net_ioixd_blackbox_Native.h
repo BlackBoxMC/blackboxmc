@@ -58,10 +58,10 @@ JNIEXPORT jboolean JNICALL Java_net_ioixd_blackbox_Native_sendEvent
 /*
  * Class:     net_ioixd_blackbox_Native
  * Method:    execute
- * Signature: (Ljava/lang/String;Ljava/lang/String;Lorg/bukkit/plugin/Plugin;[Ljava/lang/Object;)Ljava/lang/Object;
+ * Signature: (Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/Object;
  */
 JNIEXPORT jobject JNICALL Java_net_ioixd_blackbox_Native_execute
-  (JNIEnv *, jclass, jstring, jstring, jobject, jobjectArray);
+  (JNIEnv *, jclass, jstring, jstring, jobjectArray);
 
 #ifdef __cplusplus
 }

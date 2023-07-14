@@ -26,7 +26,7 @@ public class Misc {
         }
     }
 
-    public static Object tryExecute(Plugin plugin, String libName, String className, String extendsName,
+    public static Object tryExecute(String libName, String className, String extendsName,
             String funcName,
             Object[] objects, boolean mustExecute) throws Exception {
         String fullFuncName = "__extends__" + extendsName + "__" + className + "__" + funcName;
@@ -38,7 +38,7 @@ public class Misc {
                 return null;
             }
         } else {
-            return Native.execute(libName, fullFuncName, plugin, objects);
+            return Native.execute(libName, fullFuncName, objects);
         }
     }
 }

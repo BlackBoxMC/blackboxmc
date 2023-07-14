@@ -55,12 +55,21 @@ public class BlackBoxPlugin implements Plugin {
         String library;
 
         public BlackBoxPluginListener(BlackBoxPlugin plugin, String library) {
+            System.out.println("this.plugin");
             this.plugin = plugin;
+            System.out.println("this.library");
             this.library = library;
+            System.out.println("this.registeredListener");
             this.registeredListener = new RegisteredListener(this, this::onEvent, EventPriority.NORMAL, plugin, false);
+            System.out.println("unregister");
+            for (HandlerList handler : HandlerList.getHandlerLists()) {
+                handler.unregister(this);
+            }
+            System.out.println("register");
             for (HandlerList handler : HandlerList.getHandlerLists()) {
                 handler.register(this.registeredListener);
             }
+            System.out.println("done");
         }
 
         public void onEvent(Listener listener, Event event) {
@@ -98,6 +107,8 @@ public class BlackBoxPlugin implements Plugin {
     }
 
     public void updateEventListeners() {
+        this.listener.registeredListener = null;
+        this.listener = null;
         this.listener = new BlackBoxPluginListener(this, this.library);
     }
 
@@ -114,7 +125,7 @@ public class BlackBoxPlugin implements Plugin {
         try {
             boolean hasFunc = Native.libraryHasFunction(library, functionName);
             if (hasFunc) {
-                return Native.execute(this.library, "__" + functionName, this, objects);
+                return Native.execute(this.library, functionName, objects);
             } else {
                 // default
                 return null;

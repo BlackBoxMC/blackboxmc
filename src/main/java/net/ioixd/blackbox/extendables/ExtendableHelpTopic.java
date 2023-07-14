@@ -1,18 +1,14 @@
 package net.ioixd.blackbox.extendables;
 
-import net.ioixd.blackbox.BlackBox;
-
 import org.bukkit.command.CommandSender;
 import org.bukkit.help.HelpTopic;
-import org.bukkit.plugin.Plugin;
 
 public class ExtendableHelpTopic extends HelpTopic {
     public String name;
     public String inLibName;
-    public BlackBox blackBox;
 
-    ExtendableHelpTopic(Plugin blackBox, String name, String inLibName) {
-        this.blackBox = (BlackBox) blackBox;
+    ExtendableHelpTopic(String name, String inLibName) {
+
         this.name = name;
         this.inLibName = inLibName;
         Misc.throwIfFuncsNotBound(this.inLibName, this.name, this.getClass());
@@ -22,7 +18,7 @@ public class ExtendableHelpTopic extends HelpTopic {
     public void amendCanSee(String arg0) {
         Object result = null;
         try {
-            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "HelpTopic", "amendCanSee",
+            result = Misc.tryExecute(this.inLibName, this.name, "HelpTopic", "amendCanSee",
                     new Object[] {
                             arg0
                     }, false);
@@ -38,7 +34,7 @@ public class ExtendableHelpTopic extends HelpTopic {
     public void amendTopic(String arg0, String arg1) {
         Object result = null;
         try {
-            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "HelpTopic", "amendTopic",
+            result = Misc.tryExecute(this.inLibName, this.name, "HelpTopic", "amendTopic",
                     new Object[] {
                             arg0, arg1
                     }, false);
@@ -54,7 +50,7 @@ public class ExtendableHelpTopic extends HelpTopic {
     protected String applyAmendment(String arg0, String arg1) {
         Object result = null;
         try {
-            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "HelpTopic", "applyAmendment",
+            result = Misc.tryExecute(this.inLibName, this.name, "HelpTopic", "applyAmendment",
                     new Object[] {
                             arg0, arg1
                     }, false);
@@ -72,7 +68,7 @@ public class ExtendableHelpTopic extends HelpTopic {
     public String getFullText(CommandSender arg0) {
         Object result = null;
         try {
-            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "HelpTopic", "getFullText",
+            result = Misc.tryExecute(this.inLibName, this.name, "HelpTopic", "getFullText",
                     new Object[] {
                             arg0
                     }, false);
@@ -90,7 +86,7 @@ public class ExtendableHelpTopic extends HelpTopic {
     public String getName() {
         Object result = null;
         try {
-            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "HelpTopic", "getName",
+            result = Misc.tryExecute(this.inLibName, this.name, "HelpTopic", "getName",
                     new Object[] {}, false);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -106,7 +102,7 @@ public class ExtendableHelpTopic extends HelpTopic {
     public String getShortText() {
         Object result = null;
         try {
-            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "HelpTopic", "getShortText",
+            result = Misc.tryExecute(this.inLibName, this.name, "HelpTopic", "getShortText",
                     new Object[] {}, false);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -121,7 +117,7 @@ public class ExtendableHelpTopic extends HelpTopic {
     public boolean canSee(org.bukkit.command.CommandSender arg0) {
         Object result = null;
         try {
-            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "HelpTopic", "canSee",
+            result = Misc.tryExecute(this.inLibName, this.name, "HelpTopic", "canSee",
                     new Object[] { arg0 }, true);
         } catch (Exception ex) {
             ex.printStackTrace();

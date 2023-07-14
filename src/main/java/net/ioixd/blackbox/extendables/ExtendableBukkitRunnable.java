@@ -1,6 +1,6 @@
 package net.ioixd.blackbox.extendables;
 
-import net.ioixd.blackbox.BlackBox;
+import net.ioixd.blackbox.exceptions.MissingFunctionException;
 
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -9,13 +9,12 @@ import org.bukkit.scheduler.BukkitTask;
 public class ExtendableBukkitRunnable extends BukkitRunnable {
     public String name;
     public String inLibName;
-    public BlackBox blackBox;
 
     @Override
     public synchronized BukkitTask runTask(Plugin arg0) throws IllegalArgumentException, IllegalStateException {
         Object result = null;
         try {
-            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "BukkitTask", "runTask",
+            result = Misc.tryExecute(this.inLibName, this.name, "BukkitTask", "runTask",
                     new Object[] {
                             arg0
                     }, false);
@@ -34,7 +33,7 @@ public class ExtendableBukkitRunnable extends BukkitRunnable {
             throws IllegalArgumentException, IllegalStateException {
         Object result = null;
         try {
-            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "BukkitTask", "runTaskAsynchronously",
+            result = Misc.tryExecute(this.inLibName, this.name, "BukkitTask", "runTaskAsynchronously",
                     new Object[] {
                             arg0
                     }, false);
@@ -53,7 +52,7 @@ public class ExtendableBukkitRunnable extends BukkitRunnable {
             throws IllegalArgumentException, IllegalStateException {
         Object result = null;
         try {
-            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "BukkitTask", "runTaskLater",
+            result = Misc.tryExecute(this.inLibName, this.name, "BukkitTask", "runTaskLater",
                     new Object[] {
                             arg0, arg1
                     }, false);
@@ -72,7 +71,7 @@ public class ExtendableBukkitRunnable extends BukkitRunnable {
             throws IllegalArgumentException, IllegalStateException {
         Object result = null;
         try {
-            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "BukkitTask",
+            result = Misc.tryExecute(this.inLibName, this.name, "BukkitTask",
                     "runTaskLaterAsynchronously",
                     new Object[] {
                             arg0, arg1
@@ -90,18 +89,24 @@ public class ExtendableBukkitRunnable extends BukkitRunnable {
     @Override
     public synchronized BukkitTask runTaskTimer(Plugin arg0, long arg1, long arg2)
             throws IllegalArgumentException, IllegalStateException {
+        System.out.println("runTaskTimer");
         Object result = null;
+        System.out.println("try exec");
         try {
-            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "BukkitTask", "runTaskTimer",
+            result = Misc.tryExecute(this.inLibName, this.name, "BukkitTask", "runTaskTimer",
                     new Object[] {
                             arg0, arg1, arg2
                     }, false);
         } catch (Exception ex) {
             ex.printStackTrace();
+            return null;
         }
+        System.out.println("finish exec");
         if (result == null) {
+            System.out.println("result is null");
             return super.runTaskTimer(arg0, arg1, arg2);
         } else {
+            System.out.println("return \"result\"");
             return (BukkitTask) result;
         }
     }
@@ -111,7 +116,7 @@ public class ExtendableBukkitRunnable extends BukkitRunnable {
             throws IllegalArgumentException, IllegalStateException {
         Object result = null;
         try {
-            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "BukkitTask",
+            result = Misc.tryExecute(this.inLibName, this.name, "BukkitTask",
                     "runTaskTimerAsynchronously",
                     new Object[] {
                             arg0, arg1, arg2
@@ -126,8 +131,7 @@ public class ExtendableBukkitRunnable extends BukkitRunnable {
         }
     }
 
-    ExtendableBukkitRunnable(Plugin blackBox, String name, String inLibName) {
-        this.blackBox = (BlackBox) blackBox;
+    ExtendableBukkitRunnable(String name, String inLibName) throws MissingFunctionException {
         this.name = name;
         this.inLibName = inLibName;
         Misc.throwIfFuncsNotBound(this.inLibName, this.name, this.getClass());
@@ -135,7 +139,7 @@ public class ExtendableBukkitRunnable extends BukkitRunnable {
 
     public void run() {
         try {
-            Misc.tryExecute(this.blackBox, this.inLibName, this.name, "BukkitRunnable", "run",
+            Misc.tryExecute(this.inLibName, this.name, "BukkitRunnable", "run",
                     new Object[] {}, true);
         } catch (Exception ex) {
             ex.printStackTrace();

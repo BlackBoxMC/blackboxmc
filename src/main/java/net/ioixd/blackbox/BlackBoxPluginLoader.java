@@ -131,8 +131,6 @@ public final class BlackBoxPluginLoader implements PluginLoader {
         Preconditions.checkArgument(plugin != null, "Plugin can not be null");
         Preconditions.checkArgument(listener != null, "Listener can not be null");
 
-        boolean useTimings = server.getPluginManager().useTimings();
-
         Map<Class<? extends Event>, Set<RegisteredListener>> ret = new HashMap<Class<? extends Event>, Set<RegisteredListener>>();
 
         Set<Method> methods;

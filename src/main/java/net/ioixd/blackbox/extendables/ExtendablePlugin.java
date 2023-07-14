@@ -1,15 +1,13 @@
 package net.ioixd.blackbox.extendables;
 
-import net.ioixd.blackbox.BlackBox;
 import org.bukkit.plugin.Plugin;
 
 public class ExtendablePlugin implements Plugin {
     public String name;
     public String inLibName;
-    public BlackBox blackBox;
 
-    ExtendablePlugin(Plugin blackBox, String name, String inLibName) {
-        this.blackBox = (BlackBox) blackBox;
+    ExtendablePlugin(String name, String inLibName) {
+
         this.name = name;
         this.inLibName = inLibName;
         Misc.throwIfFuncsNotBound(this.inLibName, this.name, this.getClass());
@@ -18,7 +16,7 @@ public class ExtendablePlugin implements Plugin {
     public org.bukkit.Server getServer() {
         Object result = null;
         try {
-            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "Plugin", "getServer",
+            result = Misc.tryExecute(this.inLibName, this.name, "Plugin", "getServer",
                     new Object[] {}, true);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -29,7 +27,7 @@ public class ExtendablePlugin implements Plugin {
     public org.bukkit.plugin.PluginDescriptionFile getDescription() {
         Object result = null;
         try {
-            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "Plugin", "getDescription",
+            result = Misc.tryExecute(this.inLibName, this.name, "Plugin", "getDescription",
                     new Object[] {}, true);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -40,7 +38,7 @@ public class ExtendablePlugin implements Plugin {
     public org.bukkit.generator.BiomeProvider getDefaultBiomeProvider(java.lang.String arg0, java.lang.String arg1) {
         Object result = null;
         try {
-            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "Plugin", "getDefaultBiomeProvider",
+            result = Misc.tryExecute(this.inLibName, this.name, "Plugin", "getDefaultBiomeProvider",
                     new Object[] {}, true);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -51,7 +49,7 @@ public class ExtendablePlugin implements Plugin {
     public boolean isEnabled() {
         Object result = null;
         try {
-            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "Plugin", "isEnabled",
+            result = Misc.tryExecute(this.inLibName, this.name, "Plugin", "isEnabled",
                     new Object[] {}, true);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -62,7 +60,7 @@ public class ExtendablePlugin implements Plugin {
     public org.bukkit.configuration.file.FileConfiguration getConfig() {
         Object result = null;
         try {
-            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "Plugin", "getConfig",
+            result = Misc.tryExecute(this.inLibName, this.name, "Plugin", "getConfig",
                     new Object[] {}, true);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -73,7 +71,7 @@ public class ExtendablePlugin implements Plugin {
     public java.io.File getDataFolder() {
         Object result = null;
         try {
-            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "Plugin", "getDataFolder",
+            result = Misc.tryExecute(this.inLibName, this.name, "Plugin", "getDataFolder",
                     new Object[] {}, true);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -84,7 +82,7 @@ public class ExtendablePlugin implements Plugin {
     public void saveConfig() {
         Object result = null;
         try {
-            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "Plugin", "saveConfig",
+            result = Misc.tryExecute(this.inLibName, this.name, "Plugin", "saveConfig",
                     new Object[] {}, true);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -94,7 +92,7 @@ public class ExtendablePlugin implements Plugin {
     public void saveDefaultConfig() {
         Object result = null;
         try {
-            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "Plugin", "saveDefaultConfig",
+            result = Misc.tryExecute(this.inLibName, this.name, "Plugin", "saveDefaultConfig",
                     new Object[] {}, true);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -104,7 +102,7 @@ public class ExtendablePlugin implements Plugin {
     public void saveResource(java.lang.String arg0, boolean arg1) {
         Object result = null;
         try {
-            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "Plugin", "saveResource",
+            result = Misc.tryExecute(this.inLibName, this.name, "Plugin", "saveResource",
                     new Object[] {}, true);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -114,7 +112,7 @@ public class ExtendablePlugin implements Plugin {
     public void reloadConfig() {
         Object result = null;
         try {
-            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "Plugin", "reloadConfig",
+            result = Misc.tryExecute(this.inLibName, this.name, "Plugin", "reloadConfig",
                     new Object[] {}, true);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -124,7 +122,7 @@ public class ExtendablePlugin implements Plugin {
     public org.bukkit.plugin.PluginLoader getPluginLoader() {
         Object result = null;
         try {
-            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "Plugin", "getPluginLoader",
+            result = Misc.tryExecute(this.inLibName, this.name, "Plugin", "getPluginLoader",
                     new Object[] {}, true);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -135,7 +133,7 @@ public class ExtendablePlugin implements Plugin {
     public void onDisable() {
         Object result = null;
         try {
-            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "Plugin", "onDisable",
+            result = Misc.tryExecute(this.inLibName, this.name, "Plugin", "onDisable",
                     new Object[] {}, true);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -145,7 +143,7 @@ public class ExtendablePlugin implements Plugin {
     public void onLoad() {
         Object result = null;
         try {
-            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "Plugin", "onLoad",
+            result = Misc.tryExecute(this.inLibName, this.name, "Plugin", "onLoad",
                     new Object[] {}, true);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -155,7 +153,7 @@ public class ExtendablePlugin implements Plugin {
     public void onEnable() {
         Object result = null;
         try {
-            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "Plugin", "onEnable",
+            result = Misc.tryExecute(this.inLibName, this.name, "Plugin", "onEnable",
                     new Object[] {}, true);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -165,7 +163,7 @@ public class ExtendablePlugin implements Plugin {
     public boolean isNaggable() {
         Object result = null;
         try {
-            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "Plugin", "isNaggable",
+            result = Misc.tryExecute(this.inLibName, this.name, "Plugin", "isNaggable",
                     new Object[] {}, true);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -176,7 +174,7 @@ public class ExtendablePlugin implements Plugin {
     public void setNaggable(boolean arg0) {
         Object result = null;
         try {
-            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "Plugin", "setNaggable",
+            result = Misc.tryExecute(this.inLibName, this.name, "Plugin", "setNaggable",
                     new Object[] { arg0 }, true);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -186,7 +184,7 @@ public class ExtendablePlugin implements Plugin {
     public org.bukkit.generator.ChunkGenerator getDefaultWorldGenerator(java.lang.String arg0, java.lang.String arg1) {
         Object result = null;
         try {
-            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "Plugin", "getDefaultWorldGenerator",
+            result = Misc.tryExecute(this.inLibName, this.name, "Plugin", "getDefaultWorldGenerator",
                     new Object[] { arg0, arg1 }, true);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -197,7 +195,7 @@ public class ExtendablePlugin implements Plugin {
     public java.lang.String getName() {
         Object result = null;
         try {
-            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "Plugin", "getName",
+            result = Misc.tryExecute(this.inLibName, this.name, "Plugin", "getName",
                     new Object[] {}, true);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -208,7 +206,7 @@ public class ExtendablePlugin implements Plugin {
     public java.io.InputStream getResource(java.lang.String arg0) {
         Object result = null;
         try {
-            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "Plugin", "getResource",
+            result = Misc.tryExecute(this.inLibName, this.name, "Plugin", "getResource",
                     new Object[] { arg0 }, true);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -219,7 +217,7 @@ public class ExtendablePlugin implements Plugin {
     public java.util.logging.Logger getLogger() {
         Object result = null;
         try {
-            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "Plugin", "getLogger",
+            result = Misc.tryExecute(this.inLibName, this.name, "Plugin", "getLogger",
                     new Object[] {}, true);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -231,7 +229,7 @@ public class ExtendablePlugin implements Plugin {
             org.bukkit.command.Command arg1, java.lang.String arg2, java.lang.String[] arg3) {
         Object result = null;
         try {
-            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "Plugin", "onTabComplete",
+            result = Misc.tryExecute(this.inLibName, this.name, "Plugin", "onTabComplete",
                     new Object[] { arg0, arg1, arg2, arg3 }, true);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -243,7 +241,7 @@ public class ExtendablePlugin implements Plugin {
             java.lang.String arg2, java.lang.String[] arg3) {
         Object result = null;
         try {
-            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "onCommand", "onCommand",
+            result = Misc.tryExecute(this.inLibName, this.name, "onCommand", "onCommand",
                     new Object[] { arg0, arg1, arg2, arg3 }, true);
         } catch (Exception ex) {
             ex.printStackTrace();

@@ -10,13 +10,9 @@ import org.bukkit.generator.BiomeProvider;
 import org.bukkit.generator.BlockPopulator;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.generator.WorldInfo;
-import org.bukkit.plugin.Plugin;
-
-import net.ioixd.blackbox.BlackBox;
 
 public class ExtendableChunkGenerator extends ChunkGenerator {
 
-    BlackBox blackBox;
     String inLibName;
     String name;
 
@@ -24,7 +20,7 @@ public class ExtendableChunkGenerator extends ChunkGenerator {
     public boolean canSpawn(World arg0, int arg1, int arg2) {
         Object result = null;
         try {
-            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "ChunkGenerator", "canSpawn",
+            result = Misc.tryExecute(this.inLibName, this.name, "ChunkGenerator", "canSpawn",
                     new Object[] {
                             arg0, arg1, arg2
                     }, false);
@@ -42,7 +38,7 @@ public class ExtendableChunkGenerator extends ChunkGenerator {
     public void generateBedrock(WorldInfo arg0, Random arg1, int arg2, int arg3, ChunkData arg4) {
         Object result = null;
         try {
-            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "ChunkGenerator", "generateBedrock",
+            result = Misc.tryExecute(this.inLibName, this.name, "ChunkGenerator", "generateBedrock",
                     new Object[] {
                             arg0, arg1, arg2, arg3, arg4
                     }, false);
@@ -58,7 +54,7 @@ public class ExtendableChunkGenerator extends ChunkGenerator {
     public void generateCaves(WorldInfo arg0, Random arg1, int arg2, int arg3, ChunkData arg4) {
         Object result = null;
         try {
-            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "ChunkGenerator", "generateCaves",
+            result = Misc.tryExecute(this.inLibName, this.name, "ChunkGenerator", "generateCaves",
                     new Object[] {
                             arg0, arg1, arg2, arg3, arg4
                     }, false);
@@ -74,7 +70,7 @@ public class ExtendableChunkGenerator extends ChunkGenerator {
     public ChunkData generateChunkData(World arg1, Random arg2, int arg3, int arg4, BiomeGrid arg5) {
         Object result = null;
         try {
-            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "ChunkGenerator", "generateChunkData",
+            result = Misc.tryExecute(this.inLibName, this.name, "ChunkGenerator", "generateChunkData",
                     new Object[] {
                             arg1, arg2, arg3, arg4, arg5
                     }, false);
@@ -92,7 +88,7 @@ public class ExtendableChunkGenerator extends ChunkGenerator {
     public void generateNoise(WorldInfo arg1, Random arg2, int arg3, int arg4, ChunkData arg5) {
         Object result = null;
         try {
-            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "ChunkGenerator", "generateNoise",
+            result = Misc.tryExecute(this.inLibName, this.name, "ChunkGenerator", "generateNoise",
                     new Object[] {
                             arg1, arg2, arg3, arg4, arg5
                     }, false);
@@ -108,7 +104,7 @@ public class ExtendableChunkGenerator extends ChunkGenerator {
     public void generateSurface(WorldInfo arg1, Random arg2, int arg3, int arg4, ChunkData arg5) {
         Object result = null;
         try {
-            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "ChunkGenerator", "generateSurface",
+            result = Misc.tryExecute(this.inLibName, this.name, "ChunkGenerator", "generateSurface",
                     new Object[] {
                             arg1, arg2, arg3, arg4, arg5
                     }, false);
@@ -124,7 +120,7 @@ public class ExtendableChunkGenerator extends ChunkGenerator {
     public int getBaseHeight(WorldInfo arg1, Random arg2, int arg3, int arg4, HeightMap arg5) {
         Object result = null;
         try {
-            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "ChunkGenerator", "getBaseHeight",
+            result = Misc.tryExecute(this.inLibName, this.name, "ChunkGenerator", "getBaseHeight",
                     new Object[] {
                             arg1, arg2, arg3, arg4, arg5
                     }, false);
@@ -142,7 +138,7 @@ public class ExtendableChunkGenerator extends ChunkGenerator {
     public BiomeProvider getDefaultBiomeProvider(WorldInfo arg1) {
         Object result = null;
         try {
-            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "ChunkGenerator",
+            result = Misc.tryExecute(this.inLibName, this.name, "ChunkGenerator",
                     "getDefaultBiomeProvider",
                     new Object[] {
                             arg1
@@ -161,7 +157,7 @@ public class ExtendableChunkGenerator extends ChunkGenerator {
     public List<BlockPopulator> getDefaultPopulators(World arg1) {
         Object result = null;
         try {
-            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "ChunkGenerator", "getDefaultPopulators",
+            result = Misc.tryExecute(this.inLibName, this.name, "ChunkGenerator", "getDefaultPopulators",
                     new Object[] {
                             arg1
                     }, false);
@@ -179,7 +175,7 @@ public class ExtendableChunkGenerator extends ChunkGenerator {
     public Location getFixedSpawnLocation(World arg1, Random arg2) {
         Object result = null;
         try {
-            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "ChunkGenerator",
+            result = Misc.tryExecute(this.inLibName, this.name, "ChunkGenerator",
                     "getFixedSpawnLocation",
                     new Object[] {
                             arg1, arg2
@@ -198,7 +194,7 @@ public class ExtendableChunkGenerator extends ChunkGenerator {
     public boolean isParallelCapable() {
         Object result = null;
         try {
-            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "ChunkGenerator", "isParallelCapable",
+            result = Misc.tryExecute(this.inLibName, this.name, "ChunkGenerator", "isParallelCapable",
                     new Object[] {}, false);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -214,7 +210,7 @@ public class ExtendableChunkGenerator extends ChunkGenerator {
     public boolean shouldGenerateBedrock() {
         Object result = null;
         try {
-            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "ChunkGenerator",
+            result = Misc.tryExecute(this.inLibName, this.name, "ChunkGenerator",
                     "shouldGenerateBedrock",
                     new Object[] {}, false);
         } catch (Exception ex) {
@@ -231,7 +227,7 @@ public class ExtendableChunkGenerator extends ChunkGenerator {
     public boolean shouldGenerateCaves(WorldInfo arg1, Random arg2, int arg3, int arg4) {
         Object result = null;
         try {
-            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "ChunkGenerator", "shouldGenerateCaves",
+            result = Misc.tryExecute(this.inLibName, this.name, "ChunkGenerator", "shouldGenerateCaves",
                     new Object[] {
                             arg1, arg2, arg3, arg4
                     }, false);
@@ -249,7 +245,7 @@ public class ExtendableChunkGenerator extends ChunkGenerator {
     public boolean shouldGenerateDecorations(WorldInfo arg0, Random arg1, int arg2, int arg3) {
         Object result = null;
         try {
-            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "ChunkGenerator",
+            result = Misc.tryExecute(this.inLibName, this.name, "ChunkGenerator",
                     "shouldGenerateDecorations",
                     new Object[] {
                             arg0, arg1, arg2, arg3
@@ -268,7 +264,7 @@ public class ExtendableChunkGenerator extends ChunkGenerator {
     public boolean shouldGenerateMobs(WorldInfo arg0, Random arg1, int arg2, int arg3) {
         Object result = null;
         try {
-            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "ChunkGenerator", "shouldGenerateMobs",
+            result = Misc.tryExecute(this.inLibName, this.name, "ChunkGenerator", "shouldGenerateMobs",
                     new Object[] {
                             arg0, arg1, arg2, arg3
                     }, false);
@@ -286,7 +282,7 @@ public class ExtendableChunkGenerator extends ChunkGenerator {
     public boolean shouldGenerateNoise(WorldInfo arg0, Random arg1, int arg2, int arg3) {
         Object result = null;
         try {
-            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "ChunkGenerator", "shouldGenerateNoise",
+            result = Misc.tryExecute(this.inLibName, this.name, "ChunkGenerator", "shouldGenerateNoise",
                     new Object[] {
                             arg0, arg1, arg2, arg3
                     }, false);
@@ -304,7 +300,7 @@ public class ExtendableChunkGenerator extends ChunkGenerator {
     public boolean shouldGenerateStructures(WorldInfo arg0, Random arg1, int arg2, int arg3) {
         Object result = null;
         try {
-            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "ChunkGenerator",
+            result = Misc.tryExecute(this.inLibName, this.name, "ChunkGenerator",
                     "shouldGenerateStructures",
                     new Object[] {
                             arg0, arg1, arg2, arg3
@@ -323,7 +319,7 @@ public class ExtendableChunkGenerator extends ChunkGenerator {
     public boolean shouldGenerateSurface(WorldInfo arg0, Random arg1, int arg2, int arg3) {
         Object result = null;
         try {
-            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "ChunkGenerator", "runTaskTimer",
+            result = Misc.tryExecute(this.inLibName, this.name, "ChunkGenerator", "runTaskTimer",
                     new Object[] {
                             arg0, arg1, arg2, arg3
                     }, false);
@@ -337,8 +333,8 @@ public class ExtendableChunkGenerator extends ChunkGenerator {
         }
     }
 
-    ExtendableChunkGenerator(Plugin blackBox, String name, String inLibName) {
-        this.blackBox = (BlackBox) blackBox;
+    ExtendableChunkGenerator(String name, String inLibName) {
+
         this.name = name;
         this.inLibName = inLibName;
         Misc.throwIfFuncsNotBound(this.inLibName, this.name, this.getClass());

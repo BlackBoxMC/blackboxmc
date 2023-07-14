@@ -19,7 +19,7 @@ public class __skipped__ExtendableFileConfiguration extends FileConfiguration {
     public java.lang.String saveToString() {
         Object result = null;
         try {
-            result = Misc.tryExecute(this.blackBox, this.inLibName, this.name, "FileConfiguration", "saveToString",
+            result = Misc.tryExecute(this.inLibName, this.name, "FileConfiguration", "saveToString",
                     new Object[] {}, true);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -29,7 +29,7 @@ public class __skipped__ExtendableFileConfiguration extends FileConfiguration {
 
     public void loadFromString(java.lang.String arg0) {
         try {
-            Misc.tryExecute(this.blackBox, this.inLibName, this.name, "FileConfiguration", "loadToString",
+            Misc.tryExecute(this.inLibName, this.name, "FileConfiguration", "loadToString",
                     new Object[] { arg0 }, true);
         } catch (Exception ex) {
             ex.printStackTrace();
