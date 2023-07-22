@@ -2,12 +2,17 @@ package net.ioixd.blackbox.extendables;
 
 import net.ioixd.blackbox.Native;
 import org.bukkit.conversations.Prompt;
+import org.bukkit.plugin.Plugin;
 
 public class ExtendablePrompt implements Prompt {
     public String name;
     public String inLibName;
+    public Plugin plugin;
+    public int address;
 
-    ExtendablePrompt(String name, String inLibName) {
+    ExtendablePrompt(Plugin plugin, String name, String inLibName) {
+        this.plugin = plugin;
+        this.address = address;
         this.name = name;
         this.inLibName = inLibName;
         Misc.throwIfFuncsNotBound(this.inLibName, this.name, this.getClass());
@@ -17,7 +22,7 @@ public class ExtendablePrompt implements Prompt {
         Object result = null;
         try {
             result = Native.execute(this.inLibName, "__extends__Prompt__" + this.name + "__getPromptText",
-                    new Object[] {
+                    address, plugin, new Object[] {
                             arg0
                     });
         } catch (Exception ex) {
@@ -30,7 +35,7 @@ public class ExtendablePrompt implements Prompt {
         Object result = null;
         try {
             result = Native.execute(this.inLibName, "__extends__Prompt__" + this.name + "__blocksForInput",
-                    new Object[] {
+                    address, plugin, new Object[] {
                             arg0
                     });
         } catch (Exception ex) {
@@ -43,9 +48,10 @@ public class ExtendablePrompt implements Prompt {
             java.lang.String arg1) {
         Object result = null;
         try {
-            result = Native.execute(this.inLibName, "__extends__Prompt__" + this.name + "__acceptInput", new Object[] {
-                    arg0, arg1
-            });
+            result = Native.execute(this.inLibName, "__extends__Prompt__" + this.name + "__acceptInput",
+                    address, plugin, new Object[] {
+                            arg0, arg1
+                    });
         } catch (Exception ex) {
             ex.printStackTrace();
         }

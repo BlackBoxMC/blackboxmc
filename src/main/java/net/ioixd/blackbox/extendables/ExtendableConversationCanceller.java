@@ -1,13 +1,18 @@
 package net.ioixd.blackbox.extendables;
 
 import org.bukkit.conversations.ConversationCanceller;
+import org.bukkit.plugin.Plugin;
 
 public class ExtendableConversationCanceller implements ConversationCanceller {
     public String name;
     public String inLibName;
+    public Plugin plugin;
+    public int address;
 
-    ExtendableConversationCanceller(String name, String inLibName) {
+    public ExtendableConversationCanceller(int address, Plugin plugin, String name, String inLibName) {
 
+        this.plugin = plugin;
+        this.address = address;
         this.name = name;
         this.inLibName = inLibName;
         Misc.throwIfFuncsNotBound(this.inLibName, this.name, this.getClass());
@@ -18,7 +23,7 @@ public class ExtendableConversationCanceller implements ConversationCanceller {
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "ConversationCanceller",
                     "setConversation",
-                    new Object[] {
+                    address, plugin, new Object[] {
                             arg0
                     }, true);
         } catch (Exception ex) {
@@ -31,7 +36,7 @@ public class ExtendableConversationCanceller implements ConversationCanceller {
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "ConversationCanceller",
                     "cancelBasedOnInput",
-                    new Object[] {
+                    address, plugin, new Object[] {
                             arg0, arg1
                     }, true);
         } catch (Exception ex) {
@@ -44,7 +49,7 @@ public class ExtendableConversationCanceller implements ConversationCanceller {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "ConversationCanceller", "clone",
-                    new Object[] {}, true);
+                    address, plugin, new Object[] {}, true);
         } catch (Exception ex) {
             ex.printStackTrace();
         }

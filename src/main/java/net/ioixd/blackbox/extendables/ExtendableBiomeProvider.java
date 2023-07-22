@@ -3,13 +3,18 @@ package net.ioixd.blackbox.extendables;
 import net.ioixd.blackbox.exceptions.MissingFunctionException;
 
 import org.bukkit.generator.BiomeProvider;
+import org.bukkit.plugin.Plugin;
 
 public class ExtendableBiomeProvider extends BiomeProvider {
     public String name;
     public String inLibName;
+    public Plugin plugin;
+    public int address;
 
-    ExtendableBiomeProvider(String name, String inLibName) throws MissingFunctionException {
-
+    public ExtendableBiomeProvider(int address, Plugin plugin, String name, String inLibName)
+            throws MissingFunctionException {
+        this.plugin = plugin;
+        this.address = address;
         this.name = name;
         this.inLibName = inLibName;
         Misc.throwIfFuncsNotBound(this.inLibName, this.name, this.getClass());
@@ -19,7 +24,7 @@ public class ExtendableBiomeProvider extends BiomeProvider {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "BiomeProvider", "getBiome",
-                    new Object[] {
+                    address, plugin, new Object[] {
                             arg0, arg1, arg2, arg3
                     }, true);
         } catch (Exception ex) {
@@ -32,7 +37,7 @@ public class ExtendableBiomeProvider extends BiomeProvider {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "BiomeProvider", "getBiomes",
-                    new Object[] {
+                    address, plugin, new Object[] {
                             arg0
                     }, true);
         } catch (Exception ex) {

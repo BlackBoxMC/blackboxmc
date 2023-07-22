@@ -2,12 +2,17 @@ package net.ioixd.blackbox.extendables;
 
 import net.ioixd.blackbox.Native;
 import org.bukkit.command.TabExecutor;
+import org.bukkit.plugin.Plugin;
 
 public class ExtendableTabExecutor implements TabExecutor {
     public String name;
     public String inLibName;
+    public Plugin plugin;
+    public int address;
 
-    ExtendableTabExecutor(String name, String inLibName) {
+    public ExtendableTabExecutor(int address, Plugin plugin, String name, String inLibName) {
+        this.plugin = plugin;
+        this.address = address;
         this.name = name;
         this.inLibName = inLibName;
         Misc.throwIfFuncsNotBound(this.inLibName, this.name, this.getClass());
@@ -18,7 +23,7 @@ public class ExtendableTabExecutor implements TabExecutor {
         Object result = null;
         try {
             result = Native.execute(this.inLibName, "__extends__TabExecutor__" + this.name + "__onTabComplete",
-                    new Object[] {
+                    address, plugin, new Object[] {
                             arg0, arg1, arg2, arg3
                     });
         } catch (Exception ex) {
@@ -32,7 +37,7 @@ public class ExtendableTabExecutor implements TabExecutor {
         Object result = null;
         try {
             result = Native.execute(this.inLibName, "__extends__TabExecutor__" + this.name + "__onCommand",
-                    new Object[] {
+                    address, plugin, new Object[] {
                             arg0, arg1, arg2, arg3
                     });
         } catch (Exception ex) {

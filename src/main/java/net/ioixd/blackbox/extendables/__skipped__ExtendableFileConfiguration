@@ -7,11 +7,16 @@ import org.bukkit.plugin.Plugin;
 public class __skipped__ExtendableFileConfiguration extends FileConfiguration {
     public String name;
     public String inLibName;
+	public Plugin plugin;
+	public int address;
+	
     public BlackBox blackBox;
 
     __skipped__ExtendableFileConfiguration(Plugin blackBox, String name, String inLibName) {
         this.blackBox = (BlackBox) blackBox;
-        this.name = name;
+        this.plugin = plugin;
+		this.address = address;
+		this.name = name;
         this.inLibName = inLibName;
         Misc.throwIfFuncsNotBound(this.inLibName, this.name, this.getClass());
     }
@@ -20,7 +25,7 @@ public class __skipped__ExtendableFileConfiguration extends FileConfiguration {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "FileConfiguration", "saveToString",
-                    new Object[] {}, true);
+                    new Object[] {plugin,}, true);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -30,7 +35,7 @@ public class __skipped__ExtendableFileConfiguration extends FileConfiguration {
     public void loadFromString(java.lang.String arg0) {
         try {
             Misc.tryExecute(this.inLibName, this.name, "FileConfiguration", "loadToString",
-                    new Object[] { arg0 }, true);
+                    new Object[] {plugin, arg0 }, true);
         } catch (Exception ex) {
             ex.printStackTrace();
         }

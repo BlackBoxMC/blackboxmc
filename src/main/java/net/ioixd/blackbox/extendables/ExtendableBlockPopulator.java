@@ -5,17 +5,20 @@ import java.util.Random;
 import org.bukkit.generator.BlockPopulator;
 import org.bukkit.generator.LimitedRegion;
 import org.bukkit.generator.WorldInfo;
+import org.bukkit.plugin.Plugin;
 
 public class ExtendableBlockPopulator extends BlockPopulator {
     String inLibName;
     String name;
+    Plugin plugin;
+    public int address;
 
     @Override
     public void populate(WorldInfo worldInfo, Random random, int chunkX, int chunkZ, LimitedRegion limitedRegion) {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "BlockPopulator", "populate",
-                    new Object[] {
+                    address, plugin, new Object[] {
                             worldInfo, random, chunkX, chunkZ, limitedRegion
                     }, false);
         } catch (Exception ex) {
@@ -26,8 +29,10 @@ public class ExtendableBlockPopulator extends BlockPopulator {
         }
     }
 
-    ExtendableBlockPopulator(String name, String inLibName) {
+    public ExtendableBlockPopulator(int address, Plugin plugin, String name, String inLibName) {
 
+        this.plugin = plugin;
+        this.address = address;
         this.name = name;
         this.inLibName = inLibName;
     }

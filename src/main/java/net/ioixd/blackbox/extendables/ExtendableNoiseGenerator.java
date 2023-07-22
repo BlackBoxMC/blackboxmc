@@ -1,13 +1,18 @@
 package net.ioixd.blackbox.extendables;
 
 import org.bukkit.util.noise.NoiseGenerator;
+import org.bukkit.plugin.Plugin;
 
 public class ExtendableNoiseGenerator extends NoiseGenerator {
     public String name;
     public String inLibName;
+    public Plugin plugin;
+    public int address;
 
-    ExtendableNoiseGenerator(String name, String inLibName) {
+    public ExtendableNoiseGenerator(int address, Plugin plugin, String name, String inLibName) {
 
+        this.plugin = plugin;
+        this.address = address;
         this.name = name;
         this.inLibName = inLibName;
         Misc.throwIfFuncsNotBound(this.inLibName, this.name, this.getClass());
@@ -18,7 +23,7 @@ public class ExtendableNoiseGenerator extends NoiseGenerator {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "NoiseGenerator", "noise1d",
-                    new Object[] { x }, false);
+                    address, plugin, new Object[] { x }, false);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -34,7 +39,7 @@ public class ExtendableNoiseGenerator extends NoiseGenerator {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "NoiseGenerator", "noise2d",
-                    new Object[] { x, y }, false);
+                    address, plugin, new Object[] { x, y }, false);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -50,7 +55,7 @@ public class ExtendableNoiseGenerator extends NoiseGenerator {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "NoiseGenerator", "noise1d_extra",
-                    new Object[] { x, octaves, frequency, amplitude }, false);
+                    address, plugin, new Object[] { x, octaves, frequency, amplitude }, false);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -66,7 +71,7 @@ public class ExtendableNoiseGenerator extends NoiseGenerator {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "NoiseGenerator", "noise1d_extra_extra",
-                    new Object[] { x, octaves, frequency, amplitude, normalized }, false);
+                    address, plugin, new Object[] { x, octaves, frequency, amplitude, normalized }, false);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -82,7 +87,7 @@ public class ExtendableNoiseGenerator extends NoiseGenerator {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "NoiseGenerator", "noise2d_extra",
-                    new Object[] { x, y, octaves, frequency, amplitude }, false);
+                    address, plugin, new Object[] { x, y, octaves, frequency, amplitude }, false);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -98,7 +103,7 @@ public class ExtendableNoiseGenerator extends NoiseGenerator {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "NoiseGenerator", "noise2d_extra_extra",
-                    new Object[] { x, y, octaves, frequency, amplitude, normalized }, false);
+                    address, plugin, new Object[] { x, y, octaves, frequency, amplitude, normalized }, false);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -113,7 +118,7 @@ public class ExtendableNoiseGenerator extends NoiseGenerator {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "NoiseGenerator", "noise",
-                    new Object[] {
+                    address, plugin, new Object[] {
                             x, y, z
                     }, true);
         } catch (Exception ex) {
@@ -127,7 +132,7 @@ public class ExtendableNoiseGenerator extends NoiseGenerator {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "NoiseGenerator", "noise_extra",
-                    new Object[] { x, y, z, octaves, frequency, amplitude }, false);
+                    address, plugin, new Object[] { x, y, z, octaves, frequency, amplitude }, false);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -144,7 +149,7 @@ public class ExtendableNoiseGenerator extends NoiseGenerator {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "NoiseGenerator", "noise_extra_extra",
-                    new Object[] { x, y, z, octaves, frequency, amplitude }, false);
+                    address, plugin, new Object[] { x, y, z, octaves, frequency, amplitude }, false);
         } catch (Exception ex) {
             ex.printStackTrace();
         }

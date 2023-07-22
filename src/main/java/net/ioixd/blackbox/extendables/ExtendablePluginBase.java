@@ -4,14 +4,20 @@ import net.ioixd.blackbox.BlackBox;
 import net.ioixd.blackbox.Native;
 
 import org.bukkit.plugin.PluginBase;
+import org.bukkit.plugin.Plugin;
 
 public class ExtendablePluginBase extends PluginBase {
     public String name;
     public String inLibName;
+    public Plugin plugin;
+    public int address;
+
     public BlackBox blackBox;
 
-    ExtendablePluginBase(String name, String inLibName) {
+    public ExtendablePluginBase(int address, Plugin plugin, String name, String inLibName) {
 
+        this.plugin = plugin;
+        this.address = address;
         this.name = name;
         this.inLibName = inLibName;
         Misc.throwIfFuncsNotBound(this.inLibName, this.name, this.getClass());
@@ -21,7 +27,7 @@ public class ExtendablePluginBase extends PluginBase {
         Object result = null;
         try {
             result = Native.execute(this.inLibName, "__extends__PluginBase__" + this.name + "__getServer",
-                    new Object[] {});
+                    address, plugin, new Object[] {});
         } catch (Exception ex) {
             ex.printStackTrace();
             this.blackBox.getLogger().severe(
@@ -35,7 +41,7 @@ public class ExtendablePluginBase extends PluginBase {
         Object result = null;
         try {
             result = Native.execute(this.inLibName, "__extends__PluginBase__" + this.name + "__getDescription",
-                    new Object[] {});
+                    address, plugin, new Object[] {});
         } catch (Exception ex) {
             ex.printStackTrace();
             this.blackBox.getLogger().severe(
@@ -49,7 +55,7 @@ public class ExtendablePluginBase extends PluginBase {
         Object result = null;
         try {
             result = Native.execute(this.inLibName, "__extends__PluginBase__" + this.name + "__getDefaultBiomeProvider",
-                    new Object[] {
+                    address, plugin, new Object[] {
                             arg0, arg1
                     });
         } catch (Exception ex) {
@@ -65,7 +71,7 @@ public class ExtendablePluginBase extends PluginBase {
         Object result = null;
         try {
             result = Native.execute(this.inLibName, "__extends__PluginBase__" + this.name + "__isEnabled",
-                    new Object[] {});
+                    address, plugin, new Object[] {});
         } catch (Exception ex) {
             ex.printStackTrace();
             this.blackBox.getLogger().severe(
@@ -79,7 +85,7 @@ public class ExtendablePluginBase extends PluginBase {
         Object result = null;
         try {
             result = Native.execute(this.inLibName, "__extends__PluginBase__" + this.name + "__getConfig",
-                    new Object[] {});
+                    address, plugin, new Object[] {});
         } catch (Exception ex) {
             ex.printStackTrace();
             this.blackBox.getLogger().severe(
@@ -93,7 +99,7 @@ public class ExtendablePluginBase extends PluginBase {
         Object result = null;
         try {
             result = Native.execute(this.inLibName, "__extends__PluginBase__" + this.name + "__getDataFolder",
-                    new Object[] {});
+                    address, plugin, new Object[] {});
         } catch (Exception ex) {
             ex.printStackTrace();
             this.blackBox.getLogger().severe(
@@ -107,7 +113,7 @@ public class ExtendablePluginBase extends PluginBase {
         Object result = null;
         try {
             result = Native.execute(this.inLibName, "__extends__PluginBase__" + this.name + "__saveConfig",
-                    new Object[] {});
+                    address, plugin, new Object[] {});
         } catch (Exception ex) {
             ex.printStackTrace();
             this.blackBox.getLogger().severe(
@@ -120,7 +126,7 @@ public class ExtendablePluginBase extends PluginBase {
         Object result = null;
         try {
             result = Native.execute(this.inLibName, "__extends__PluginBase__" + this.name + "__saveDefaultConfig",
-                    new Object[] {});
+                    address, plugin, new Object[] {});
         } catch (Exception ex) {
             ex.printStackTrace();
             this.blackBox.getLogger().severe(
@@ -133,7 +139,7 @@ public class ExtendablePluginBase extends PluginBase {
         Object result = null;
         try {
             result = Native.execute(this.inLibName, "__extends__PluginBase__" + this.name + "__saveResource",
-                    new Object[] {
+                    address, plugin, new Object[] {
                             arg0, arg1
                     });
         } catch (Exception ex) {
@@ -148,7 +154,7 @@ public class ExtendablePluginBase extends PluginBase {
         Object result = null;
         try {
             result = Native.execute(this.inLibName, "__extends__PluginBase__" + this.name + "__reloadConfig",
-                    new Object[] {});
+                    address, plugin, new Object[] {});
         } catch (Exception ex) {
             ex.printStackTrace();
             this.blackBox.getLogger().severe(
@@ -161,7 +167,7 @@ public class ExtendablePluginBase extends PluginBase {
         Object result = null;
         try {
             result = Native.execute(this.inLibName, "__extends__PluginBase__" + this.name + "__getPluginLoader",
-                    new Object[] {});
+                    address, plugin, new Object[] {});
         } catch (Exception ex) {
             ex.printStackTrace();
             this.blackBox.getLogger().severe(
@@ -175,7 +181,7 @@ public class ExtendablePluginBase extends PluginBase {
         Object result = null;
         try {
             result = Native.execute(this.inLibName, "__extends__PluginBase__" + this.name + "__onDisable",
-                    new Object[] {});
+                    address, plugin, new Object[] {});
         } catch (Exception ex) {
             ex.printStackTrace();
             this.blackBox.getLogger().severe(
@@ -188,7 +194,7 @@ public class ExtendablePluginBase extends PluginBase {
         Object result = null;
         try {
             result = Native.execute(this.inLibName, "__extends__PluginBase__" + this.name + "__onLoad",
-                    new Object[] {});
+                    address, plugin, new Object[] {});
         } catch (Exception ex) {
             ex.printStackTrace();
             this.blackBox.getLogger().severe(
@@ -201,7 +207,7 @@ public class ExtendablePluginBase extends PluginBase {
         Object result = null;
         try {
             result = Native.execute(this.inLibName, "__extends__PluginBase__" + this.name + "__onEnable",
-                    new Object[] {});
+                    address, plugin, new Object[] {});
         } catch (Exception ex) {
             ex.printStackTrace();
             this.blackBox.getLogger().severe(
@@ -214,7 +220,7 @@ public class ExtendablePluginBase extends PluginBase {
         Object result = null;
         try {
             result = Native.execute(this.inLibName, "__extends__PluginBase__" + this.name + "__isNaggable",
-                    new Object[] {});
+                    address, plugin, new Object[] {});
         } catch (Exception ex) {
             ex.printStackTrace();
             this.blackBox.getLogger().severe(
@@ -228,7 +234,7 @@ public class ExtendablePluginBase extends PluginBase {
         Object result = null;
         try {
             result = Native.execute(this.inLibName, "__extends__PluginBase__" + this.name + "__setNaggable",
-                    new Object[] {
+                    address, plugin, new Object[] {
                             arg0
                     });
         } catch (Exception ex) {
@@ -243,7 +249,8 @@ public class ExtendablePluginBase extends PluginBase {
         Object result = null;
         try {
             result = Native.execute(this.inLibName,
-                    "__extends__PluginBase__" + this.name + "__getDefaultWorldGenerator", new Object[] {
+                    "__extends__PluginBase__" + this.name + "__getDefaultWorldGenerator", address, plugin,
+                    new Object[] {
                             arg0, arg1
                     });
         } catch (Exception ex) {
@@ -259,7 +266,7 @@ public class ExtendablePluginBase extends PluginBase {
         Object result = null;
         try {
             result = Native.execute(this.inLibName, "__extends__PluginBase__" + this.name + "__getResource",
-                    new Object[] {
+                    address, plugin, new Object[] {
                             arg0
                     });
         } catch (Exception ex) {
@@ -275,7 +282,7 @@ public class ExtendablePluginBase extends PluginBase {
         Object result = null;
         try {
             result = Native.execute(this.inLibName, "__extends__PluginBase__" + this.name + "__getLogger",
-                    new Object[] {});
+                    address, plugin, new Object[] {});
         } catch (Exception ex) {
             ex.printStackTrace();
             this.blackBox.getLogger().severe(
@@ -290,7 +297,7 @@ public class ExtendablePluginBase extends PluginBase {
         Object result = null;
         try {
             result = Native.execute(this.inLibName, "__extends__PluginBase__" + this.name + "__onTabComplete",
-                    new Object[] {
+                    address, plugin, new Object[] {
                             arg0, arg1, arg2, arg3
                     });
         } catch (Exception ex) {
@@ -307,7 +314,7 @@ public class ExtendablePluginBase extends PluginBase {
         Object result = null;
         try {
             result = Native.execute(this.inLibName, "__extends__PluginBase__" + this.name + "__onCommand",
-                    new Object[] {
+                    address, plugin, new Object[] {
                             arg0, arg1, arg2, arg3
                     });
         } catch (Exception ex) {

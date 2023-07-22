@@ -1,13 +1,18 @@
 package net.ioixd.blackbox.extendables;
 
 import org.bukkit.metadata.MetadataValue;
+import org.bukkit.plugin.Plugin;
 
 public class ExtendableMetadataValue implements MetadataValue {
     public String name;
     public String inLibName;
+    public Plugin plugin;
+    public int address;
 
-    ExtendableMetadataValue(String name, String inLibName) {
+    public ExtendableMetadataValue(int address, Plugin plugin, String name, String inLibName) {
 
+        this.plugin = plugin;
+        this.address = address;
         this.name = name;
         this.inLibName = inLibName;
         Misc.throwIfFuncsNotBound(this.inLibName, this.name, this.getClass());
@@ -17,7 +22,7 @@ public class ExtendableMetadataValue implements MetadataValue {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "MetaDataValue", "asString",
-                    new Object[] {}, true);
+                    address, plugin, new Object[] {}, true);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -28,7 +33,7 @@ public class ExtendableMetadataValue implements MetadataValue {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "MetaDataValue", "asInt",
-                    new Object[] {}, true);
+                    address, plugin, new Object[] {}, true);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -39,7 +44,7 @@ public class ExtendableMetadataValue implements MetadataValue {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "MetaDataValue", "getOwningPlugin",
-                    new Object[] {}, true);
+                    address, plugin, new Object[] {}, true);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -49,7 +54,7 @@ public class ExtendableMetadataValue implements MetadataValue {
     public void invalidate() {
         try {
             Misc.tryExecute(this.inLibName, this.name, "invalidate", "asString",
-                    new Object[] {}, true);
+                    address, plugin, new Object[] {}, true);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -59,7 +64,7 @@ public class ExtendableMetadataValue implements MetadataValue {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "MetaDataValue", "asFloat",
-                    new Object[] {}, true);
+                    address, plugin, new Object[] {}, true);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -70,7 +75,7 @@ public class ExtendableMetadataValue implements MetadataValue {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "asDouble", "asString",
-                    new Object[] {}, true);
+                    address, plugin, new Object[] {}, true);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -81,7 +86,7 @@ public class ExtendableMetadataValue implements MetadataValue {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "MetaDataValue", "asLong",
-                    new Object[] {}, true);
+                    address, plugin, new Object[] {}, true);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -92,7 +97,7 @@ public class ExtendableMetadataValue implements MetadataValue {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "MetaDataValue", "asShort",
-                    new Object[] {}, true);
+                    address, plugin, new Object[] {}, true);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -103,7 +108,7 @@ public class ExtendableMetadataValue implements MetadataValue {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "MetaDataValue", "asByte",
-                    new Object[] {}, true);
+                    address, plugin, new Object[] {}, true);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -114,7 +119,7 @@ public class ExtendableMetadataValue implements MetadataValue {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "MetaDataValue", "asBoolean",
-                    new Object[] {}, true);
+                    address, plugin, new Object[] {}, true);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -125,7 +130,7 @@ public class ExtendableMetadataValue implements MetadataValue {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "MetaDataValue", "value",
-                    new Object[] {}, true);
+                    address, plugin, new Object[] {}, true);
         } catch (Exception ex) {
             ex.printStackTrace();
         }

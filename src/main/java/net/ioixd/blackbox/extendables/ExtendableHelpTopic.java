@@ -2,13 +2,18 @@ package net.ioixd.blackbox.extendables;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.help.HelpTopic;
+import org.bukkit.plugin.Plugin;
 
 public class ExtendableHelpTopic extends HelpTopic {
     public String name;
     public String inLibName;
+    public Plugin plugin;
+    public int address;
 
-    ExtendableHelpTopic(String name, String inLibName) {
+    public ExtendableHelpTopic(int address, Plugin plugin, String name, String inLibName) {
 
+        this.plugin = plugin;
+        this.address = address;
         this.name = name;
         this.inLibName = inLibName;
         Misc.throwIfFuncsNotBound(this.inLibName, this.name, this.getClass());
@@ -19,7 +24,7 @@ public class ExtendableHelpTopic extends HelpTopic {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "HelpTopic", "amendCanSee",
-                    new Object[] {
+                    address, plugin, new Object[] {
                             arg0
                     }, false);
         } catch (Exception ex) {
@@ -35,7 +40,7 @@ public class ExtendableHelpTopic extends HelpTopic {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "HelpTopic", "amendTopic",
-                    new Object[] {
+                    address, plugin, new Object[] {
                             arg0, arg1
                     }, false);
         } catch (Exception ex) {
@@ -51,7 +56,7 @@ public class ExtendableHelpTopic extends HelpTopic {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "HelpTopic", "applyAmendment",
-                    new Object[] {
+                    address, plugin, new Object[] {
                             arg0, arg1
                     }, false);
         } catch (Exception ex) {
@@ -69,7 +74,7 @@ public class ExtendableHelpTopic extends HelpTopic {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "HelpTopic", "getFullText",
-                    new Object[] {
+                    address, plugin, new Object[] {
                             arg0
                     }, false);
         } catch (Exception ex) {
@@ -87,7 +92,7 @@ public class ExtendableHelpTopic extends HelpTopic {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "HelpTopic", "getName",
-                    new Object[] {}, false);
+                    address, plugin, new Object[] {}, false);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -103,7 +108,7 @@ public class ExtendableHelpTopic extends HelpTopic {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "HelpTopic", "getShortText",
-                    new Object[] {}, false);
+                    address, plugin, new Object[] {}, false);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -118,7 +123,7 @@ public class ExtendableHelpTopic extends HelpTopic {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "HelpTopic", "canSee",
-                    new Object[] { arg0 }, true);
+                    address, plugin, new Object[] { arg0 }, true);
         } catch (Exception ex) {
             ex.printStackTrace();
         }

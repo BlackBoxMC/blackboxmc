@@ -15,5 +15,6 @@ public class Native {
 
     public static native boolean sendEvent(String libName, String functionName, Object object);
 
-    public static native Object execute(String libName, String functionName, Object[] objects) throws Exception;
+    public static native Object execute(String libName, String functionName, int address, Plugin plugin,
+            Object[] objects) throws Exception;
 }

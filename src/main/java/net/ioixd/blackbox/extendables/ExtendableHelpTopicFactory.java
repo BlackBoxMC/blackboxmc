@@ -1,13 +1,18 @@
 package net.ioixd.blackbox.extendables;
 
 import org.bukkit.help.HelpTopicFactory;
+import org.bukkit.plugin.Plugin;
 
 public class ExtendableHelpTopicFactory implements HelpTopicFactory {
     public String name;
     public String inLibName;
+    public Plugin plugin;
+    public int address;
 
-    ExtendableHelpTopicFactory(String name, String inLibName) {
+    public ExtendableHelpTopicFactory(int address, Plugin plugin, String name, String inLibName) {
 
+        this.plugin = plugin;
+        this.address = address;
         this.name = name;
         this.inLibName = inLibName;
         Misc.throwIfFuncsNotBound(this.inLibName, this.name, this.getClass());
@@ -17,7 +22,7 @@ public class ExtendableHelpTopicFactory implements HelpTopicFactory {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "HelpTopicFactory", "createTopic",
-                    new Object[] { arg0 }, true);
+                    address, plugin, new Object[] { arg0 }, true);
         } catch (Exception ex) {
             ex.printStackTrace();
         }

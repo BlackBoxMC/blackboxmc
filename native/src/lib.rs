@@ -51,7 +51,7 @@ static mut LIBRARY_MANAGER: Lazy<LibraryManager> = Lazy::new(|| LibraryManager::
 
 use jni::{
     objects::{JObject, JString},
-    sys::jboolean,
+    sys::{jboolean, jint},
     JNIEnv,
 };
 use libloading::Library;
@@ -232,6 +232,8 @@ pub extern "system" fn Java_net_ioixd_blackbox_Native_execute<'a>(
     _obj: JObject,
     libname_raw: JString,
     funcname_raw: JString,
+    address: jint,
+    plugin: JObject,
     ev: JObject,
 ) -> JObject<'a> {
     let libname_raw = env.get_string(&libname_raw);
@@ -252,7 +254,9 @@ pub extern "system" fn Java_net_ioixd_blackbox_Native_execute<'a>(
     )
     .library();
     let func: Result<
-        libloading::Symbol<extern "C" fn(JNIEnv<'_>, JObject<'_>) -> JObject<'a>>,
+        libloading::Symbol<
+            extern "C" fn(JNIEnv<'_>, jint, JObject<'_>, JObject<'_>) -> JObject<'a>,
+        >,
         libloading::Error,
     > = unsafe { lib.get(funcname.as_bytes()) };
     if let Err(e) = &func {
@@ -263,7 +267,7 @@ pub extern "system" fn Java_net_ioixd_blackbox_Native_execute<'a>(
         }
     }
     let func = func.unwrap();
-    return func(env, ev);
+    return func(env, address, plugin, ev);
 }
 
 pub fn unwrap_result_or_java_error<V, E, S>(

@@ -3,13 +3,18 @@ package net.ioixd.blackbox.extendables;
 import net.ioixd.blackbox.Native;
 
 import org.bukkit.plugin.PluginLoader;
+import org.bukkit.plugin.Plugin;
 
 public class ExtendablePluginLoader implements PluginLoader {
     public String name;
     public String inLibName;
+    public Plugin plugin;
+    public int address;
 
-    ExtendablePluginLoader(String name, String inLibName) {
+    public ExtendablePluginLoader(int address, Plugin plugin, String name, String inLibName) {
 
+        this.plugin = plugin;
+        this.address = address;
         this.name = name;
         this.inLibName = inLibName;
         Misc.throwIfFuncsNotBound(this.inLibName, this.name, this.getClass());
@@ -19,7 +24,7 @@ public class ExtendablePluginLoader implements PluginLoader {
         Object result = null;
         try {
             result = Native.execute(this.inLibName, "__extends__PluginLoader__" + this.name + "__loadPlugin",
-                    new Object[] {
+                    address, plugin, new Object[] {
                             arg0
                     });
         } catch (Exception ex) {
@@ -32,7 +37,7 @@ public class ExtendablePluginLoader implements PluginLoader {
         Object result = null;
         try {
             result = Native.execute(this.inLibName, "__extends__PluginLoader__" + this.name + "__getPluginDescription",
-                    new Object[] {
+                    address, plugin, new Object[] {
                             arg0
                     });
         } catch (Exception ex) {
@@ -45,7 +50,7 @@ public class ExtendablePluginLoader implements PluginLoader {
         Object result = null;
         try {
             result = Native.execute(this.inLibName, "__extends__PluginLoader__" + this.name + "__getPluginFileFilters",
-                    new Object[] {});
+                    address, plugin, new Object[] {});
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -57,7 +62,8 @@ public class ExtendablePluginLoader implements PluginLoader {
         Object result = null;
         try {
             result = Native.execute(this.inLibName,
-                    "__extends__PluginLoader__" + this.name + "__createRegisteredListeners", new Object[] {
+                    "__extends__PluginLoader__" + this.name + "__createRegisteredListeners", address, plugin,
+                    new Object[] {
                             arg0, arg1
                     });
         } catch (Exception ex) {
@@ -70,7 +76,7 @@ public class ExtendablePluginLoader implements PluginLoader {
         Object result = null;
         try {
             result = Native.execute(this.inLibName, "__extends__PluginLoader__" + this.name + "__enablePlugin",
-                    new Object[] {
+                    address, plugin, new Object[] {
                             arg0
                     });
         } catch (Exception ex) {
@@ -82,7 +88,7 @@ public class ExtendablePluginLoader implements PluginLoader {
         Object result = null;
         try {
             result = Native.execute(this.inLibName, "__extends__PluginLoader__" + this.name + "__disablePlugin",
-                    new Object[] {
+                    address, plugin, new Object[] {
                             arg0
                     });
         } catch (Exception ex) {

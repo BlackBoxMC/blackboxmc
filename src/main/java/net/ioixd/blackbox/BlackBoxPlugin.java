@@ -6,9 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,6 +29,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.RegisteredListener;
 
 import com.google.common.base.Charsets;
+
+import net.ioixd.blackbox.extendables.*;
 
 public class BlackBoxPlugin implements Plugin {
     String library;
@@ -55,21 +55,15 @@ public class BlackBoxPlugin implements Plugin {
         String library;
 
         public BlackBoxPluginListener(BlackBoxPlugin plugin, String library) {
-            System.out.println("this.plugin");
             this.plugin = plugin;
-            System.out.println("this.library");
             this.library = library;
-            System.out.println("this.registeredListener");
             this.registeredListener = new RegisteredListener(this, this::onEvent, EventPriority.NORMAL, plugin, false);
-            System.out.println("unregister");
             for (HandlerList handler : HandlerList.getHandlerLists()) {
                 handler.unregister(this);
             }
-            System.out.println("register");
             for (HandlerList handler : HandlerList.getHandlerLists()) {
                 handler.register(this.registeredListener);
             }
-            System.out.println("done");
         }
 
         public void onEvent(Listener listener, Event event) {
@@ -106,6 +100,53 @@ public class BlackBoxPlugin implements Plugin {
         this.file = new File(this.library);
     }
 
+    public Object newExtendable(int address, String className, String name, String inLibName) throws Exception {
+        switch (className) {
+            case "BiomeProvider":
+                return (Object) new ExtendableBiomeProvider(address, (Plugin) this, name, inLibName);
+            case "BlockPopulator":
+                return (Object) new ExtendableBlockPopulator(address, (Plugin) this, name, inLibName);
+            case "BukkitRunnable":
+                return (Object) new ExtendableBukkitRunnable(address, (Plugin) this, name, inLibName);
+            case "ChunkGenerator":
+                return (Object) new ExtendableChunkGenerator(address, (Plugin) this, name, inLibName);
+            case "CommandExecutor":
+                return (Object) new ExtendableCommandExecutor(address, (Plugin) this, name, inLibName);
+            case "ConfigurationSerializable":
+                return (Object) new ExtendableConfigurationSerializable(address, (Plugin) this, name, inLibName);
+            case "Consumer":
+                return (Object) new ExtendableConsumer(address, (Plugin) this, name, inLibName);
+            case "ConversationCanceller":
+                return (Object) new ExtendableConversationCanceller(address, (Plugin) this, name, inLibName);
+            case "ConversationPrefix":
+                return (Object) new ExtendableConversationPrefix(address, (Plugin) this, name, inLibName);
+            case "HelpTopic":
+                return (Object) new ExtendableHelpTopic(address, (Plugin) this, name, inLibName);
+            case "HelpTopicFactory":
+                return (Object) new ExtendableHelpTopicFactory(address, (Plugin) this, name, inLibName);
+            case "MapRenderer":
+                return (Object) new ExtendableMapRenderer(address, (Plugin) this, name, inLibName);
+            case "MetadataValue":
+                return (Object) new ExtendableMetadataValue(address, (Plugin) this, name, inLibName);
+            case "NoiseGenerator":
+                return (Object) new ExtendableNoiseGenerator(address, (Plugin) this, name, inLibName);
+            case "PersistentDataType":
+                return (Object) new ExtendablePersistentDataType(address, (Plugin) this, name, inLibName);
+            case "Plugin":
+                return (Object) new ExtendablePlugin(address, (Plugin) this, name, inLibName);
+            case "PluginBase":
+                return (Object) new ExtendablePluginBase(address, (Plugin) this, name, inLibName);
+            case "PluginLoader":
+                return (Object) new ExtendablePluginLoader(address, (Plugin) this, name, inLibName);
+            case "TabCompleter":
+                return (Object) new ExtendableTabCompleter(address, (Plugin) this, name, inLibName);
+            case "TabExecutor":
+                return (Object) new ExtendableTabExecutor(address, (Plugin) this, name, inLibName);
+            default:
+                throw new Exception("Non-extendable object given");
+        }
+    }
+
     public void updateEventListeners() {
         this.listener.registeredListener = null;
         this.listener = null;
@@ -125,7 +166,7 @@ public class BlackBoxPlugin implements Plugin {
         try {
             boolean hasFunc = Native.libraryHasFunction(library, functionName);
             if (hasFunc) {
-                return Native.execute(this.library, functionName, objects);
+                return Native.execute(this.library, functionName, 0, this, objects);
             } else {
                 // default
                 return null;
@@ -140,7 +181,7 @@ public class BlackBoxPlugin implements Plugin {
 
     @Override
     public FileConfiguration getConfig() {
-        Object func = execNative("getConfig", new Object[] {});
+        Object func = execNative("getConfig", new Object[] { this, });
         if (func == null) {
             if (newConfig == null) {
                 this.reloadConfig();
@@ -153,7 +194,7 @@ public class BlackBoxPlugin implements Plugin {
 
     @Override
     public BiomeProvider getDefaultBiomeProvider(String worldName, String id) {
-        Object func = execNative("getDefaultBiomeProvider", new Object[] { worldName, id });
+        Object func = execNative("getDefaultBiomeProvider", new Object[] { this, worldName, id });
         if (func == null) {
             return parent.getDefaultBiomeProvider(worldName, id);
         } else {
@@ -163,7 +204,7 @@ public class BlackBoxPlugin implements Plugin {
 
     @Override
     public ChunkGenerator getDefaultWorldGenerator(String worldName, String id) {
-        Object func = execNative("getDefaultWorldGenerator", new Object[] { worldName, id });
+        Object func = execNative("getDefaultWorldGenerator", new Object[] { this, worldName, id });
         if (func == null) {
             return parent.getDefaultWorldGenerator(worldName, id);
         } else {
@@ -173,7 +214,7 @@ public class BlackBoxPlugin implements Plugin {
 
     @Override
     public Logger getLogger() {
-        Object func = execNative("getLogger", new Object[] {});
+        Object func = execNative("getLogger", new Object[] { this, });
         if (func == null) {
             return parent.getLogger();
         } else {
@@ -183,7 +224,7 @@ public class BlackBoxPlugin implements Plugin {
 
     @Override
     public InputStream getResource(String filename) {
-        Object func = execNative("getResource", new Object[] { filename });
+        Object func = execNative("getResource", new Object[] { this, filename });
         if (func == null) {
             throw new UnsupportedOperationException(
                     "BlackBox plugins do not have embedded resources; the plugin author may choose to add an abstraction for them, but if you're seeing this then they don't. (\"Embedded resources\" refer to resources that would normally come from a .jar; they are not to be confused with anything that might embed a file into a library, you have to handle those yourself).");
@@ -194,7 +235,7 @@ public class BlackBoxPlugin implements Plugin {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        Object func = execNative("onCommand", new Object[] { sender, command, label, args });
+        Object func = execNative("onCommand", new Object[] { this, sender, command, label, args });
         if (func == null) {
             return false;
         } else {
@@ -205,24 +246,24 @@ public class BlackBoxPlugin implements Plugin {
     @Override
     public void onDisable() {
         // if it doesn't exist, nothing happens
-        execNative("onDisable", new Object[] {});
+        execNative("onDisable", new Object[] { this, });
     }
 
     @Override
     public void onEnable() {
         // if it doesn't exist, nothing happens
-        execNative("onEnable", new Object[] {});
+        execNative("onEnable", new Object[] { this, });
     }
 
     @Override
     public void onLoad() {
         // if it doesn't exist, nothing happens
-        execNative("onLoad", new Object[] {});
+        execNative("onLoad", new Object[] { this, });
     }
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-        Object func = execNative("onTabComplete", new Object[] { sender, command, alias, args });
+        Object func = execNative("onTabComplete", new Object[] { this, sender, command, alias, args });
         if (func == null) {
             return null;
         } else {
@@ -232,7 +273,7 @@ public class BlackBoxPlugin implements Plugin {
 
     @Override
     public void reloadConfig() {
-        Object func = execNative("reloadConfig", new Object[] {});
+        Object func = execNative("reloadConfig", new Object[] { this, });
         if (func == null) {
             newConfig = YamlConfiguration.loadConfiguration(configFile);
 
@@ -248,7 +289,7 @@ public class BlackBoxPlugin implements Plugin {
 
     @Override
     public void saveConfig() {
-        Object func = execNative("saveConfig", new Object[] {});
+        Object func = execNative("saveConfig", new Object[] { this, });
         if (func == null) {
             try {
                 getConfig().save(configFile);
@@ -260,7 +301,7 @@ public class BlackBoxPlugin implements Plugin {
 
     @Override
     public void saveDefaultConfig() {
-        Object func = execNative("saveDefaultConfig", new Object[] {});
+        Object func = execNative("saveDefaultConfig", new Object[] { this, });
         if (func == null) {
             if (!configFile.exists()) {
                 saveResource("config.yml", false);
@@ -270,7 +311,7 @@ public class BlackBoxPlugin implements Plugin {
 
     @Override
     public void saveResource(String resourcePath, boolean replace) {
-        Object func = execNative("saveResource", new Object[] {});
+        Object func = execNative("saveResource", new Object[] { this, });
         if (func == null) {
             if (resourcePath == null || resourcePath.equals("")) {
                 throw new IllegalArgumentException("ResourcePath cannot be null or empty");
@@ -313,7 +354,7 @@ public class BlackBoxPlugin implements Plugin {
 
     @Override
     public String toString() {
-        Object func = execNative("toString", new Object[] {});
+        Object func = execNative("toString", new Object[] { this, });
         if (func == null) {
             return description.getFullName();
         } else {
@@ -323,7 +364,7 @@ public class BlackBoxPlugin implements Plugin {
 
     @Override
     public File getDataFolder() {
-        Object func = execNative("getDataFolder", new Object[] {});
+        Object func = execNative("getDataFolder", new Object[] { this, });
         if (func == null) {
             return dataFolder;
         } else {
@@ -333,7 +374,7 @@ public class BlackBoxPlugin implements Plugin {
 
     @Override
     public PluginDescriptionFile getDescription() {
-        Object func = execNative("getDescription", new Object[] {});
+        Object func = execNative("getDescription", new Object[] { this, });
         if (func == null) {
             try {
                 return loader.getPluginDescription(file);
@@ -348,7 +389,7 @@ public class BlackBoxPlugin implements Plugin {
 
     @Override
     public PluginLoader getPluginLoader() {
-        Object func = execNative("getPluginLoader", new Object[] {});
+        Object func = execNative("getPluginLoader", new Object[] { this, });
         if (func == null) {
             return loader;
         } else {
@@ -358,7 +399,7 @@ public class BlackBoxPlugin implements Plugin {
 
     @Override
     public Server getServer() {
-        Object func = execNative("getServer", new Object[] {});
+        Object func = execNative("getServer", new Object[] { this, });
         if (func == null) {
             return parent.getServer();
         } else {
@@ -368,7 +409,7 @@ public class BlackBoxPlugin implements Plugin {
 
     @Override
     public boolean isEnabled() {
-        Object func = execNative("isEnabled", new Object[] {});
+        Object func = execNative("isEnabled", new Object[] { this, });
         if (func == null) {
             return isEnabled;
         } else {
@@ -378,7 +419,7 @@ public class BlackBoxPlugin implements Plugin {
 
     @Override
     public boolean isNaggable() {
-        Object func = execNative("isNaggable", new Object[] {});
+        Object func = execNative("isNaggable", new Object[] { this, });
         if (func == null) {
             return naggable;
         } else {
@@ -388,7 +429,7 @@ public class BlackBoxPlugin implements Plugin {
 
     @Override
     public void setNaggable(boolean canNag) {
-        Object func = execNative("setNaggable", new Object[] {});
+        Object func = execNative("setNaggable", new Object[] { this, });
         if (func == null) {
             naggable = canNag;
         }
