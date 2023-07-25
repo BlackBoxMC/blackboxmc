@@ -101,50 +101,7 @@ public class BlackBoxPlugin implements Plugin {
     }
 
     public Object newExtendable(int address, String className, String name, String inLibName) throws Exception {
-        switch (className) {
-            case "BiomeProvider":
-                return (Object) new ExtendableBiomeProvider(address, (Plugin) this, name, inLibName);
-            case "BlockPopulator":
-                return (Object) new ExtendableBlockPopulator(address, (Plugin) this, name, inLibName);
-            case "BukkitRunnable":
-                return (Object) new ExtendableBukkitRunnable(address, (Plugin) this, name, inLibName);
-            case "ChunkGenerator":
-                return (Object) new ExtendableChunkGenerator(address, (Plugin) this, name, inLibName);
-            case "CommandExecutor":
-                return (Object) new ExtendableCommandExecutor(address, (Plugin) this, name, inLibName);
-            case "ConfigurationSerializable":
-                return (Object) new ExtendableConfigurationSerializable(address, (Plugin) this, name, inLibName);
-            case "Consumer":
-                return (Object) new ExtendableConsumer(address, (Plugin) this, name, inLibName);
-            case "ConversationCanceller":
-                return (Object) new ExtendableConversationCanceller(address, (Plugin) this, name, inLibName);
-            case "ConversationPrefix":
-                return (Object) new ExtendableConversationPrefix(address, (Plugin) this, name, inLibName);
-            case "HelpTopic":
-                return (Object) new ExtendableHelpTopic(address, (Plugin) this, name, inLibName);
-            case "HelpTopicFactory":
-                return (Object) new ExtendableHelpTopicFactory(address, (Plugin) this, name, inLibName);
-            case "MapRenderer":
-                return (Object) new ExtendableMapRenderer(address, (Plugin) this, name, inLibName);
-            case "MetadataValue":
-                return (Object) new ExtendableMetadataValue(address, (Plugin) this, name, inLibName);
-            case "NoiseGenerator":
-                return (Object) new ExtendableNoiseGenerator(address, (Plugin) this, name, inLibName);
-            case "PersistentDataType":
-                return (Object) new ExtendablePersistentDataType(address, (Plugin) this, name, inLibName);
-            case "Plugin":
-                return (Object) new ExtendablePlugin(address, (Plugin) this, name, inLibName);
-            case "PluginBase":
-                return (Object) new ExtendablePluginBase(address, (Plugin) this, name, inLibName);
-            case "PluginLoader":
-                return (Object) new ExtendablePluginLoader(address, (Plugin) this, name, inLibName);
-            case "TabCompleter":
-                return (Object) new ExtendableTabCompleter(address, (Plugin) this, name, inLibName);
-            case "TabExecutor":
-                return (Object) new ExtendableTabExecutor(address, (Plugin) this, name, inLibName);
-            default:
-                throw new Exception("Non-extendable object given");
-        }
+        return Misc.newExtendable(address, (Plugin) this, className, name, inLibName);
     }
 
     public void updateEventListeners() {
