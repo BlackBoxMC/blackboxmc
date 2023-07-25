@@ -7,7 +7,7 @@ BlackBox is a Minecraft plugin that will allow you to write plugins in many othe
 **This plugin is made knowing why this hasn't been done before and why you might not want to do it.** 
 
 - Distributing plugins made this way becomes much harder.
-- You technically lose performance since JNI calls are slow (...they take about 15ms on a good machine but this might matter in some scenarios)
+- You technically lose performance since JNI calls are slow (...they take about 15ns on a good machine but this might matter in some scenarios)
 - You lose the ability to link to, and therefore create addons for, other plugins, unless you want to fork this repo and add support for the plugin in question (I am considering adding support in the helper library for the most popular plugins). 
 
 **It's assumed that you don't care.** This is for the people who are sick of Java, never want to work with Gradle or IntelliJ ever again, and just want to use a language that they actually like (assuming they dislike Java).
