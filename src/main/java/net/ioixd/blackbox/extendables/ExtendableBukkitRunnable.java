@@ -90,25 +90,19 @@ public class ExtendableBukkitRunnable extends BukkitRunnable {
 
     @Override
     public synchronized BukkitTask runTaskTimer(Plugin arg0, long arg1, long arg2)
-            throws IllegalArgumentException, IllegalStateException {
-        System.out.println("runTaskTimer");
+            throws IllegalArgumentException, IllegalStateException, RuntimeException {
         Object result = null;
-        System.out.println("try exec");
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "BukkitTask", "runTaskTimer",
                     address, plugin, new Object[] {
                             arg0, arg1, arg2
                     }, false);
         } catch (Exception ex) {
-            ex.printStackTrace();
-            return null;
+            throw new RuntimeException(ex);
         }
-        System.out.println("finish exec");
         if (result == null) {
-            System.out.println("result is null");
             return super.runTaskTimer(arg0, arg1, arg2);
         } else {
-            System.out.println("return \"result\"");
             return (BukkitTask) result;
         }
     }

@@ -1,39 +1,39 @@
 struct SwitchableLibrary {
-    library: Mutex<Library>,
-    enabled: Mutex<bool>,
+    library: Library,
+    enabled: RwLock<bool>,
 }
 
 impl SwitchableLibrary {
     fn new(library: Library, enabled: bool) -> Self {
         Self {
-            library: Mutex::new(library),
-            enabled: Mutex::new(enabled),
+            library: library,
+            enabled: RwLock::new(enabled),
         }
     }
-    fn library(&self) -> MutexGuard<Library> {
-        self.library.lock()
+    fn library(&self) -> &Library {
+        &self.library
     }
     fn set_enabled(&self, enabled: bool) {
-        *self.enabled.lock() = enabled;
+        *self.enabled.write() = enabled;
     }
 }
 
 struct LibraryManager {
-    loaded_libraries: Mutex<HashMap<String, SwitchableLibrary>>,
+    loaded_libraries: RwLock<HashMap<String, SwitchableLibrary>>,
 }
 
 impl LibraryManager {
     fn new() -> Self {
         Self {
-            loaded_libraries: Mutex::new(HashMap::new()),
+            loaded_libraries: RwLock::new(HashMap::new()),
         }
     }
     fn push_lib(&mut self, libname: String, lib: (Library, bool)) {
-        let libs = &mut self.loaded_libraries.lock();
+        let libs = &mut self.loaded_libraries.write();
         libs.insert(libname, SwitchableLibrary::new(lib.0, lib.1));
     }
-    fn libraries(&self) -> MutexGuard<HashMap<String, SwitchableLibrary>> {
-        self.loaded_libraries.lock()
+    fn libraries(&self) -> RwLockReadGuard<HashMap<String, SwitchableLibrary>> {
+        self.loaded_libraries.read()
     }
     fn set_enabled(&self, file: String, enabled: bool) {
         self.libraries().get(&file).unwrap().set_enabled(enabled);
@@ -56,7 +56,7 @@ use jni::{
 };
 use libloading::Library;
 use once_cell::sync::Lazy;
-use parking_lot::{Mutex, MutexGuard};
+use parking_lot::{RwLock, RwLockReadGuard};
 
 use std::{collections::HashMap, error::Error, fmt::Display};
 
