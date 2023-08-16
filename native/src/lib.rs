@@ -50,7 +50,7 @@ impl LibraryManager {
 static mut LIBRARY_MANAGER: Lazy<LibraryManager> = Lazy::new(|| LibraryManager::new());
 
 use jni::{
-    objects::{JObject, JString},
+    objects::{JClass, JObject, JString},
     sys::{jboolean, jint},
     JNIEnv,
 };
@@ -270,6 +270,28 @@ pub extern "system" fn Java_net_ioixd_blackbox_Native_execute<'a>(
     return func(env, address, plugin, ev);
 }
 
+type BiConsumer = unsafe extern "system" fn(t: JObject, u: JObject);
+#[no_mangle]
+pub extern "system" fn Java_net_ioixd_blackbox_BiConsumerLink_acceptNative<'a>(
+    mut env: JNIEnv<'a>,
+    this: JObject,
+    obj1: JObject,
+    obj2: JObject,
+) {
+    || -> Result<(), Box<dyn Error>> {
+        let field = env.get_field(this, "address", "J");
+        let address_raw = unwrap_result_or_java_error(&mut env, "", field);
+        let address = address_raw.j()? as u64;
+        println!("{:#x}", address);
+        unsafe {
+            let func: BiConsumer = std::mem::transmute(address);
+            func(obj1, obj2);
+        }
+        Ok(())
+    }()
+    .unwrap();
+}
+
 pub fn unwrap_result_or_java_error<V, E, S>(
     mut env: &mut JNIEnv,
     libname: S,
@@ -304,6 +326,7 @@ where
     match opt {
         Some(v) => v,
         None => {
+            panic!();
             throw_with_error(
                 &mut env,
                 "net/ioixd/blackbox/exceptions/NativeLibrarySymbolLoadException",
