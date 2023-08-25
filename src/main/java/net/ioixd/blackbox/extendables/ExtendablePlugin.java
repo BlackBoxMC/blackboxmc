@@ -21,7 +21,7 @@ public class ExtendablePlugin implements Plugin {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "Plugin", "getServer",
-                    address, plugin, new Object[] {}, true);
+                    address, plugin, new Object[] {}, true, true);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -32,7 +32,7 @@ public class ExtendablePlugin implements Plugin {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "Plugin", "getDescription",
-                    address, plugin, new Object[] {}, true);
+                    address, plugin, new Object[] {}, true, true);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -43,7 +43,7 @@ public class ExtendablePlugin implements Plugin {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "Plugin", "getDefaultBiomeProvider",
-                    address, plugin, new Object[] {}, true);
+                    address, plugin, new Object[] {}, true, true);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -54,7 +54,7 @@ public class ExtendablePlugin implements Plugin {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "Plugin", "isEnabled",
-                    address, plugin, new Object[] {}, true);
+                    address, plugin, new Object[] {}, true, true);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -65,7 +65,7 @@ public class ExtendablePlugin implements Plugin {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "Plugin", "getConfig",
-                    address, plugin, new Object[] {}, true);
+                    address, plugin, new Object[] {}, true, true);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -76,7 +76,7 @@ public class ExtendablePlugin implements Plugin {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "Plugin", "getDataFolder",
-                    address, plugin, new Object[] {}, true);
+                    address, plugin, new Object[] {}, true, true);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -87,7 +87,7 @@ public class ExtendablePlugin implements Plugin {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "Plugin", "saveConfig",
-                    address, plugin, new Object[] {}, true);
+                    address, plugin, new Object[] {}, true, false);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -97,7 +97,7 @@ public class ExtendablePlugin implements Plugin {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "Plugin", "saveDefaultConfig",
-                    address, plugin, new Object[] {}, true);
+                    address, plugin, new Object[] {}, true, false);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -107,7 +107,7 @@ public class ExtendablePlugin implements Plugin {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "Plugin", "saveResource",
-                    address, plugin, new Object[] {}, true);
+                    address, plugin, new Object[] {}, true, false);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -117,7 +117,7 @@ public class ExtendablePlugin implements Plugin {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "Plugin", "reloadConfig",
-                    address, plugin, new Object[] {}, true);
+                    address, plugin, new Object[] {}, true, false);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -127,7 +127,7 @@ public class ExtendablePlugin implements Plugin {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "Plugin", "getPluginLoader",
-                    address, plugin, new Object[] {}, true);
+                    address, plugin, new Object[] {}, true, true);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -138,7 +138,7 @@ public class ExtendablePlugin implements Plugin {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "Plugin", "onDisable",
-                    address, plugin, new Object[] {}, true);
+                    address, plugin, new Object[] {}, true, false);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -148,7 +148,7 @@ public class ExtendablePlugin implements Plugin {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "Plugin", "onLoad",
-                    address, plugin, new Object[] {}, true);
+                    address, plugin, new Object[] {}, true, false);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -158,7 +158,7 @@ public class ExtendablePlugin implements Plugin {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "Plugin", "onEnable",
-                    address, plugin, new Object[] {}, true);
+                    address, plugin, new Object[] {}, true, false);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -168,7 +168,7 @@ public class ExtendablePlugin implements Plugin {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "Plugin", "isNaggable",
-                    address, plugin, new Object[] {}, true);
+                    address, plugin, new Object[] {}, true, true);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -179,7 +179,7 @@ public class ExtendablePlugin implements Plugin {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "Plugin", "setNaggable",
-                    address, plugin, new Object[] { arg0 }, true);
+                    address, plugin, new Object[] { arg0 }, true, false);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -189,7 +189,7 @@ public class ExtendablePlugin implements Plugin {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "Plugin", "getDefaultWorldGenerator",
-                    address, plugin, new Object[] { arg0, arg1 }, true);
+                    address, plugin, new Object[] { arg0, arg1 }, true, true);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -200,7 +200,7 @@ public class ExtendablePlugin implements Plugin {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "Plugin", "getName",
-                    address, plugin, new Object[] {}, true);
+                    address, plugin, new Object[] {}, true, true);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -211,7 +211,7 @@ public class ExtendablePlugin implements Plugin {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "Plugin", "getResource",
-                    address, plugin, new Object[] { arg0 }, true);
+                    address, plugin, new Object[] { arg0 }, true, true);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -222,7 +222,7 @@ public class ExtendablePlugin implements Plugin {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "Plugin", "getLogger",
-                    address, plugin, new Object[] {}, true);
+                    address, plugin, new Object[] {}, true, true);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -234,7 +234,7 @@ public class ExtendablePlugin implements Plugin {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "Plugin", "onTabComplete",
-                    address, plugin, new Object[] { arg0, arg1, arg2, arg3 }, true);
+                    address, plugin, new Object[] { arg0, arg1, arg2, arg3 }, true, true);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -246,7 +246,7 @@ public class ExtendablePlugin implements Plugin {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "onCommand", "onCommand",
-                    address, plugin, new Object[] { arg0, arg1, arg2, arg3 }, true);
+                    address, plugin, new Object[] { arg0, arg1, arg2, arg3 }, true, true);
         } catch (Exception ex) {
             ex.printStackTrace();
         }

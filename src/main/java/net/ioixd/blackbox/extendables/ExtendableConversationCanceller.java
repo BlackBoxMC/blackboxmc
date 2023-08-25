@@ -25,7 +25,7 @@ public class ExtendableConversationCanceller implements ConversationCanceller {
                     "setConversation",
                     address, plugin, new Object[] {
                             arg0
-                    }, true);
+                    }, true, false);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -38,7 +38,7 @@ public class ExtendableConversationCanceller implements ConversationCanceller {
                     "cancelBasedOnInput",
                     address, plugin, new Object[] {
                             arg0, arg1
-                    }, true);
+                    }, true, true);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -49,7 +49,7 @@ public class ExtendableConversationCanceller implements ConversationCanceller {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "ConversationCanceller", "clone",
-                    address, plugin, new Object[] {}, true);
+                    address, plugin, new Object[] {}, true, true);
         } catch (Exception ex) {
             ex.printStackTrace();
         }

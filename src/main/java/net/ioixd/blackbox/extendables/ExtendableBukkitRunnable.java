@@ -19,7 +19,7 @@ public class ExtendableBukkitRunnable extends BukkitRunnable {
             result = Misc.tryExecute(this.inLibName, this.name, "BukkitTask", "runTask",
                     address, plugin, new Object[] {
                             arg0
-                    }, false);
+                    }, false, true);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -38,7 +38,7 @@ public class ExtendableBukkitRunnable extends BukkitRunnable {
             result = Misc.tryExecute(this.inLibName, this.name, "BukkitTask", "runTaskAsynchronously",
                     address, plugin, new Object[] {
                             arg0
-                    }, false);
+                    }, false, true);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -57,7 +57,7 @@ public class ExtendableBukkitRunnable extends BukkitRunnable {
             result = Misc.tryExecute(this.inLibName, this.name, "BukkitTask", "runTaskLater",
                     address, plugin, new Object[] {
                             arg0, arg1
-                    }, false);
+                    }, false, true);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -77,7 +77,7 @@ public class ExtendableBukkitRunnable extends BukkitRunnable {
                     "runTaskLaterAsynchronously",
                     address, plugin, new Object[] {
                             arg0, arg1
-                    }, false);
+                    }, false, true);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -96,7 +96,7 @@ public class ExtendableBukkitRunnable extends BukkitRunnable {
             result = Misc.tryExecute(this.inLibName, this.name, "BukkitTask", "runTaskTimer",
                     address, plugin, new Object[] {
                             arg0, arg1, arg2
-                    }, false);
+                    }, false, true);
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
@@ -116,7 +116,7 @@ public class ExtendableBukkitRunnable extends BukkitRunnable {
                     "runTaskTimerAsynchronously",
                     address, plugin, new Object[] {
                             arg0, arg1, arg2
-                    }, false);
+                    }, false, true);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -139,7 +139,7 @@ public class ExtendableBukkitRunnable extends BukkitRunnable {
     public void run() {
         try {
             Misc.tryExecute(this.inLibName, this.name, "BukkitRunnable", "run",
-                    address, plugin, new Object[] {}, true);
+                    address, plugin, new Object[] {}, true, false);
         } catch (Exception ex) {
             ex.printStackTrace();
         }

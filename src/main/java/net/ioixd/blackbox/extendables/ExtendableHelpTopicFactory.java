@@ -22,7 +22,7 @@ public class ExtendableHelpTopicFactory implements HelpTopicFactory {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "HelpTopicFactory", "createTopic",
-                    address, plugin, new Object[] { arg0 }, true);
+                    address, plugin, new Object[] { arg0 }, true, true);
         } catch (Exception ex) {
             ex.printStackTrace();
         }

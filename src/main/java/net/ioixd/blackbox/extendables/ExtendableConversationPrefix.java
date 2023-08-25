@@ -24,7 +24,7 @@ public class ExtendableConversationPrefix implements ConversationPrefix {
             result = Misc.tryExecute(this.inLibName, this.name, "ConversationPrefix", "getPrefix",
                     address, plugin, new Object[] {
                             arg0
-                    }, true);
+                    }, true, true);
         } catch (Exception ex) {
             ex.printStackTrace();
         }

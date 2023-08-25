@@ -1,17 +1,14 @@
 struct SwitchableLibrary {
-    library: Library,
+    library: RwLock<ManuallyDrop<Library>>,
     enabled: RwLock<bool>,
 }
 
 impl SwitchableLibrary {
-    fn new(library: Library, enabled: bool) -> Self {
+    fn new(library: ManuallyDrop<Library>, enabled: bool) -> Self {
         Self {
-            library: library,
+            library: RwLock::new(library),
             enabled: RwLock::new(enabled),
         }
-    }
-    fn library(&self) -> &Library {
-        &self.library
     }
     fn set_enabled(&self, enabled: bool) {
         *self.enabled.write() = enabled;
@@ -28,7 +25,7 @@ impl LibraryManager {
             loaded_libraries: RwLock::new(HashMap::new()),
         }
     }
-    fn push_lib(&self, libname: String, lib: (Library, bool)) {
+    fn push_lib(&self, libname: String, lib: (ManuallyDrop<Library>, bool)) {
         let libs = &mut self.loaded_libraries.write();
         libs.insert(libname, SwitchableLibrary::new(lib.0, lib.1));
     }
@@ -54,11 +51,11 @@ use jni::{
     sys::{jboolean, jint},
     JNIEnv,
 };
-use libloading::Library;
+use libloading::{Library, Symbol};
 use once_cell::sync::Lazy;
-use parking_lot::{RwLock, RwLockReadGuard};
+use parking_lot::{Mutex, RwLock, RwLockReadGuard};
 
-use std::{collections::HashMap, error::Error, fmt::Display};
+use std::{collections::HashMap, error::Error, fmt::Display, mem::ManuallyDrop};
 
 fn load_library(path: String) -> Result<Library, libloading::Error> {
     unsafe {
@@ -108,7 +105,7 @@ pub extern "system" fn Java_net_ioixd_blackbox_Native_loadPlugin<'a>(
     {
         name = name.replace(".so", "");
     }
-    LIBRARY_MANAGER.push_lib(name, (lib, true));
+    LIBRARY_MANAGER.push_lib(name, (ManuallyDrop::new(lib), true));
 }
 
 #[no_mangle]
@@ -164,7 +161,7 @@ pub extern "system" fn Java_net_ioixd_blackbox_Native_libraryHasFunction<'a>(
         .to_string();
 
     let manager = LIBRARY_MANAGER.libraries();
-    let lib = manager.get(&libname).unwrap().library();
+    let lib = manager.get(&libname).unwrap().library.read();
     let func: Result<
         libloading::Symbol<unsafe extern "C" fn(JNIEnv<'_>, JObject<'_>)>,
         libloading::Error,
@@ -178,7 +175,7 @@ pub extern "system" fn Java_net_ioixd_blackbox_Native_libraryHasFunction<'a>(
                 return false.into();
             }
             _ => {
-                throw_libloading_error(&mut env, &libname, e);
+                throw_libloading_error(&mut env, &libname, &e);
                 return false.into();
             }
         }
@@ -210,7 +207,8 @@ pub extern "system" fn Java_net_ioixd_blackbox_Native_sendEvent<'a>(
         &"library".to_string(),
         manager.get(&libname),
     )
-    .library();
+    .library
+    .read();
     let func: Result<
         libloading::Symbol<extern "C" fn(JNIEnv<'_>, JObject<'_>)>,
         libloading::Error,
@@ -224,7 +222,7 @@ pub extern "system" fn Java_net_ioixd_blackbox_Native_sendEvent<'a>(
                 return false.into();
             }
             _ => {
-                throw_libloading_error(&mut env, &libname, e);
+                throw_libloading_error(&mut env, &libname, &e);
                 return false.into();
             }
         }
@@ -260,7 +258,8 @@ pub extern "system" fn Java_net_ioixd_blackbox_Native_execute<'a>(
         &format!("manager.get({})", &libname),
         manager.get(&libname),
     )
-    .library();
+    .library
+    .write();
     let func: Result<
         libloading::Symbol<
             extern "C" fn(JNIEnv<'_>, jint, JObject<'_>, JObject<'_>) -> JObject<'a>,
@@ -270,12 +269,17 @@ pub extern "system" fn Java_net_ioixd_blackbox_Native_execute<'a>(
     if let Err(e) = &func {
         match e {
             _ => {
-                throw_libloading_error(&mut env, &libname, e);
+                throw_libloading_error(&mut env, &libname, &e);
             }
         }
     }
     let func = func.unwrap();
-    return func(env, address, plugin, ev);
+    if !plugin.is_null() && !ev.is_null() {
+        return func(env, address, plugin, ev);
+    } else {
+        println!("NULL");
+        return JObject::null();
+    }
 }
 
 type BiConsumer = unsafe extern "system" fn(t: JObject, u: JObject);
@@ -395,6 +399,4 @@ pub fn throw_with_error(env: &mut JNIEnv, exception_name: &str, exception_messag
     if let Err(_) = er {
         env.exception_describe().unwrap();
     }
-    // TEMPORARY: just describe the error
-    env.exception_describe().unwrap();
 }

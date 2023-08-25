@@ -26,7 +26,7 @@ public class ExtendableBiomeProvider extends BiomeProvider {
             result = Misc.tryExecute(this.inLibName, this.name, "BiomeProvider", "getBiome",
                     address, plugin, new Object[] {
                             arg0, arg1, arg2, arg3
-                    }, true);
+                    }, true, true);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -39,7 +39,7 @@ public class ExtendableBiomeProvider extends BiomeProvider {
             result = Misc.tryExecute(this.inLibName, this.name, "BiomeProvider", "getBiomes",
                     address, plugin, new Object[] {
                             arg0
-                    }, true);
+                    }, true, true);
         } catch (Exception ex) {
             ex.printStackTrace();
         }

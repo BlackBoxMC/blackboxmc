@@ -22,7 +22,7 @@ public class ExtendableMapRenderer extends MapRenderer {
     public void render(org.bukkit.map.MapView arg0, org.bukkit.map.MapCanvas arg1, org.bukkit.entity.Player arg2) {
         try {
             Misc.tryExecute(this.inLibName, this.name, "MapRenderer", "render",
-                    address, plugin, new Object[] { arg0, arg1, arg2 }, true);
+                    address, plugin, new Object[] { arg0, arg1, arg2 }, true, false);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -33,7 +33,7 @@ public class ExtendableMapRenderer extends MapRenderer {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "MapRenderer", "initialize",
-                    address, plugin, new Object[] { arg0 }, false);
+                    address, plugin, new Object[] { arg0 }, false, false);
         } catch (Exception ex) {
             ex.printStackTrace();
         }

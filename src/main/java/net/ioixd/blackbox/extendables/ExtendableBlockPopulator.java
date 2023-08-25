@@ -20,7 +20,7 @@ public class ExtendableBlockPopulator extends BlockPopulator {
             result = Misc.tryExecute(this.inLibName, this.name, "BlockPopulator", "populate",
                     address, plugin, new Object[] {
                             worldInfo, random, chunkX, chunkZ, limitedRegion
-                    }, false);
+                    }, false, false);
         } catch (Exception ex) {
             ex.printStackTrace();
         }

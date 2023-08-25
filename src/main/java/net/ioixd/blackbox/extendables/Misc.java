@@ -28,7 +28,7 @@ public class Misc {
 
     public static Object tryExecute(String libName, String className, String extendsName,
             String funcName,
-            int address, Plugin plugin, Object[] objects, boolean mustExecute) throws Exception {
+            int address, Plugin plugin, Object[] objects, boolean mustExecute, boolean mustReturn) throws Exception {
         String fullFuncName = "__extends__" + extendsName + "__" + className + "__" + funcName;
         boolean has = Native.libraryHasFunction(libName, fullFuncName);
         if (has == false) {
@@ -38,7 +38,16 @@ public class Misc {
                 return null;
             }
         } else {
-            return Native.execute(libName, fullFuncName, address, plugin, objects);
+            if (mustReturn) {
+                return Native.execute(libName, fullFuncName, address, plugin, objects);
+            } else {
+                if (plugin.getServer().getOnlinePlayers().size() >= 1) {
+                    return Native.execute(libName, fullFuncName, address, plugin, objects);
+                } else {
+                    return null;
+                }
+            }
+
         }
     }
 

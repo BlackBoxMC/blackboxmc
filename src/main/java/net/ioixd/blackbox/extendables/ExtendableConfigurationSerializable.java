@@ -22,7 +22,7 @@ public class ExtendableConfigurationSerializable implements ConfigurationSeriali
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "ConfigurationSerializable", "serialize",
-                    address, plugin, new Object[] {}, true);
+                    address, plugin, new Object[] {}, true, true);
         } catch (Exception ex) {
             ex.printStackTrace();
         }

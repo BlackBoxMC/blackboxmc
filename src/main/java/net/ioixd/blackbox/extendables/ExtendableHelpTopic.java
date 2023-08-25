@@ -26,7 +26,7 @@ public class ExtendableHelpTopic extends HelpTopic {
             result = Misc.tryExecute(this.inLibName, this.name, "HelpTopic", "amendCanSee",
                     address, plugin, new Object[] {
                             arg0
-                    }, false);
+                    }, false, false);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -42,7 +42,7 @@ public class ExtendableHelpTopic extends HelpTopic {
             result = Misc.tryExecute(this.inLibName, this.name, "HelpTopic", "amendTopic",
                     address, plugin, new Object[] {
                             arg0, arg1
-                    }, false);
+                    }, false, false);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -58,7 +58,7 @@ public class ExtendableHelpTopic extends HelpTopic {
             result = Misc.tryExecute(this.inLibName, this.name, "HelpTopic", "applyAmendment",
                     address, plugin, new Object[] {
                             arg0, arg1
-                    }, false);
+                    }, false, true);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -76,7 +76,7 @@ public class ExtendableHelpTopic extends HelpTopic {
             result = Misc.tryExecute(this.inLibName, this.name, "HelpTopic", "getFullText",
                     address, plugin, new Object[] {
                             arg0
-                    }, false);
+                    }, false, true);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -92,7 +92,7 @@ public class ExtendableHelpTopic extends HelpTopic {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "HelpTopic", "getName",
-                    address, plugin, new Object[] {}, false);
+                    address, plugin, new Object[] {}, false, true);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -108,7 +108,7 @@ public class ExtendableHelpTopic extends HelpTopic {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "HelpTopic", "getShortText",
-                    address, plugin, new Object[] {}, false);
+                    address, plugin, new Object[] {}, false, true);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -123,7 +123,7 @@ public class ExtendableHelpTopic extends HelpTopic {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "HelpTopic", "canSee",
-                    address, plugin, new Object[] { arg0 }, true);
+                    address, plugin, new Object[] { arg0 }, true, true);
         } catch (Exception ex) {
             ex.printStackTrace();
         }

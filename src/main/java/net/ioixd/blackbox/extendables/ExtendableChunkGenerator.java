@@ -26,7 +26,7 @@ public class ExtendableChunkGenerator extends ChunkGenerator {
             result = Misc.tryExecute(this.inLibName, this.name, "ChunkGenerator", "canSpawn",
                     address, plugin, new Object[] {
                             arg0, arg1, arg2
-                    }, false);
+                    }, false, true);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -44,7 +44,7 @@ public class ExtendableChunkGenerator extends ChunkGenerator {
             result = Misc.tryExecute(this.inLibName, this.name, "ChunkGenerator", "generateBedrock",
                     address, plugin, new Object[] {
                             arg0, arg1, arg2, arg3, arg4
-                    }, false);
+                    }, false, false);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -60,7 +60,7 @@ public class ExtendableChunkGenerator extends ChunkGenerator {
             result = Misc.tryExecute(this.inLibName, this.name, "ChunkGenerator", "generateCaves",
                     address, plugin, new Object[] {
                             arg0, arg1, arg2, arg3, arg4
-                    }, false);
+                    }, false, false);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -76,7 +76,7 @@ public class ExtendableChunkGenerator extends ChunkGenerator {
             result = Misc.tryExecute(this.inLibName, this.name, "ChunkGenerator", "generateChunkData",
                     address, plugin, new Object[] {
                             arg1, arg2, arg3, arg4, arg5
-                    }, false);
+                    }, false, true);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -94,7 +94,7 @@ public class ExtendableChunkGenerator extends ChunkGenerator {
             result = Misc.tryExecute(this.inLibName, this.name, "ChunkGenerator", "generateNoise",
                     address, plugin, new Object[] {
                             arg1, arg2, arg3, arg4, arg5
-                    }, false);
+                    }, false, false);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -110,7 +110,7 @@ public class ExtendableChunkGenerator extends ChunkGenerator {
             result = Misc.tryExecute(this.inLibName, this.name, "ChunkGenerator", "generateSurface",
                     address, plugin, new Object[] {
                             arg1, arg2, arg3, arg4, arg5
-                    }, false);
+                    }, false, false);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -126,7 +126,7 @@ public class ExtendableChunkGenerator extends ChunkGenerator {
             result = Misc.tryExecute(this.inLibName, this.name, "ChunkGenerator", "getBaseHeight",
                     address, plugin, new Object[] {
                             arg1, arg2, arg3, arg4, arg5
-                    }, false);
+                    }, false, false);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -145,7 +145,7 @@ public class ExtendableChunkGenerator extends ChunkGenerator {
                     "getDefaultBiomeProvider",
                     address, plugin, new Object[] {
                             arg1
-                    }, false);
+                    }, false, false);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -163,7 +163,7 @@ public class ExtendableChunkGenerator extends ChunkGenerator {
             result = Misc.tryExecute(this.inLibName, this.name, "ChunkGenerator", "getDefaultPopulators",
                     address, plugin, new Object[] {
                             arg1
-                    }, false);
+                    }, false, false);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -182,7 +182,7 @@ public class ExtendableChunkGenerator extends ChunkGenerator {
                     "getFixedSpawnLocation",
                     address, plugin, new Object[] {
                             arg1, arg2
-                    }, false);
+                    }, false, true);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -198,7 +198,7 @@ public class ExtendableChunkGenerator extends ChunkGenerator {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "ChunkGenerator", "isParallelCapable",
-                    address, plugin, new Object[] {}, false);
+                    address, plugin, new Object[] {}, false, true);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -215,7 +215,7 @@ public class ExtendableChunkGenerator extends ChunkGenerator {
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "ChunkGenerator",
                     "shouldGenerateBedrock",
-                    address, plugin, new Object[] {}, false);
+                    address, plugin, new Object[] {}, false, true);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -233,7 +233,7 @@ public class ExtendableChunkGenerator extends ChunkGenerator {
             result = Misc.tryExecute(this.inLibName, this.name, "ChunkGenerator", "shouldGenerateCaves",
                     address, plugin, new Object[] {
                             arg1, arg2, arg3, arg4
-                    }, false);
+                    }, false, true);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -252,7 +252,7 @@ public class ExtendableChunkGenerator extends ChunkGenerator {
                     "shouldGenerateDecorations",
                     address, plugin, new Object[] {
                             arg0, arg1, arg2, arg3
-                    }, false);
+                    }, false, true);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -270,7 +270,7 @@ public class ExtendableChunkGenerator extends ChunkGenerator {
             result = Misc.tryExecute(this.inLibName, this.name, "ChunkGenerator", "shouldGenerateMobs",
                     address, plugin, new Object[] {
                             arg0, arg1, arg2, arg3
-                    }, false);
+                    }, false, true);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -288,7 +288,7 @@ public class ExtendableChunkGenerator extends ChunkGenerator {
             result = Misc.tryExecute(this.inLibName, this.name, "ChunkGenerator", "shouldGenerateNoise",
                     address, plugin, new Object[] {
                             arg0, arg1, arg2, arg3
-                    }, false);
+                    }, false, true);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -307,7 +307,7 @@ public class ExtendableChunkGenerator extends ChunkGenerator {
                     "shouldGenerateStructures",
                     address, plugin, new Object[] {
                             arg0, arg1, arg2, arg3
-                    }, false);
+                    }, false, true);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -325,7 +325,7 @@ public class ExtendableChunkGenerator extends ChunkGenerator {
             result = Misc.tryExecute(this.inLibName, this.name, "ChunkGenerator", "runTaskTimer",
                     address, plugin, new Object[] {
                             arg0, arg1, arg2, arg3
-                    }, false);
+                    }, false, true);
         } catch (Exception ex) {
             ex.printStackTrace();
         }

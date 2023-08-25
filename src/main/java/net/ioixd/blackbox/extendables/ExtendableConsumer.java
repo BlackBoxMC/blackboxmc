@@ -24,7 +24,7 @@ public class ExtendableConsumer implements Consumer {
             result = Misc.tryExecute(this.inLibName, this.name, "Consumer", "accept",
                     address, plugin, new Object[] {
                             arg0
-                    }, true);
+                    }, true, false);
         } catch (Exception ex) {
             ex.printStackTrace();
         }

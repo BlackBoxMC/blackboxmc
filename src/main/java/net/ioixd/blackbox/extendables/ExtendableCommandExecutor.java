@@ -25,7 +25,7 @@ public class ExtendableCommandExecutor implements CommandExecutor {
             result = Misc.tryExecute(this.inLibName, this.name, "CommandExecutor", "onCommand",
                     address, plugin, new Object[] {
                             arg0, arg1, arg2, arg3
-                    }, true);
+                    }, true, true);
         } catch (Exception ex) {
             ex.printStackTrace();
         }

@@ -22,7 +22,7 @@ public class ExtendablePersistentDataType implements PersistentDataType {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "PersistentDataType", "getPrimitiveType",
-                    address, plugin, new Object[] {}, true);
+                    address, plugin, new Object[] {}, true, true);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -33,7 +33,7 @@ public class ExtendablePersistentDataType implements PersistentDataType {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "PersistentDataType", "getComplexType",
-                    address, plugin, new Object[] {}, true);
+                    address, plugin, new Object[] {}, true, true);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -45,7 +45,7 @@ public class ExtendablePersistentDataType implements PersistentDataType {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "PersistentDataType", "toPrimtive",
-                    address, plugin, new Object[] { arg0, arg1 }, true);
+                    address, plugin, new Object[] { arg0, arg1 }, true, true);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -57,7 +57,7 @@ public class ExtendablePersistentDataType implements PersistentDataType {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "PersistentDataType", "fromPrimitive",
-                    address, plugin, new Object[] { arg0, arg1 }, true);
+                    address, plugin, new Object[] { arg0, arg1 }, true, true);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
