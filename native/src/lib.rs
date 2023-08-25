@@ -28,7 +28,7 @@ impl LibraryManager {
             loaded_libraries: RwLock::new(HashMap::new()),
         }
     }
-    fn push_lib(&mut self, libname: String, lib: (Library, bool)) {
+    fn push_lib(&self, libname: String, lib: (Library, bool)) {
         let libs = &mut self.loaded_libraries.write();
         libs.insert(libname, SwitchableLibrary::new(lib.0, lib.1));
     }
@@ -47,7 +47,7 @@ impl LibraryManager {
     }
 }
 
-static mut LIBRARY_MANAGER: Lazy<LibraryManager> = Lazy::new(|| LibraryManager::new());
+static LIBRARY_MANAGER: Lazy<LibraryManager> = Lazy::new(|| LibraryManager::new());
 
 use jni::{
     objects::{JClass, JObject, JString},
@@ -60,6 +60,20 @@ use parking_lot::{RwLock, RwLockReadGuard};
 
 use std::{collections::HashMap, error::Error, fmt::Display};
 
+fn load_library(path: String) -> Result<Library, libloading::Error> {
+    unsafe {
+        // Load and initialize library
+        #[cfg(target_os = "linux")]
+        let library: Library = {
+            // Load library with `RTLD_NOW | RTLD_NODELETE` to fix a SIGSEGV
+            ::libloading::os::unix::Library::open(Some(&path), 0x2 | 0x1000)?.into()
+        };
+        #[cfg(not(target_os = "linux"))]
+        let library = Library::new(&path)?;
+        Ok(library)
+    }
+}
+
 #[no_mangle]
 pub extern "system" fn Java_net_ioixd_blackbox_Native_loadPlugin<'a>(
     mut env: JNIEnv<'a>,
@@ -71,32 +85,30 @@ pub extern "system" fn Java_net_ioixd_blackbox_Native_loadPlugin<'a>(
         .unwrap()
         .to_string_lossy()
         .to_string();
-    unsafe {
-        let lib = libloading::Library::new(&file);
-        if let Err(e) = &lib {
-            throw_libloading_error(&mut env, &file, e);
-            return;
-        }
-        let lib = lib.unwrap();
-        let parts = file
-            .split(std::path::MAIN_SEPARATOR)
-            .map(|f| f.to_string())
-            .collect::<Vec<String>>();
-        let mut name = parts.get(parts.len() - 1).unwrap().clone();
-        #[cfg(target_os = "windows")]
-        {
-            name = name.replace(".dll", "");
-        }
-        #[cfg(target_os = "macos")]
-        {
-            name = name.replace(".dylib", "");
-        }
-        #[cfg(target_os = "linux")]
-        {
-            name = name.replace(".so", "");
-        }
-        LIBRARY_MANAGER.push_lib(name, (lib, true));
+    let lib = load_library(file.clone());
+    if let Err(e) = &lib {
+        throw_libloading_error(&mut env, &file, e);
+        return;
     }
+    let lib = lib.unwrap();
+    let parts = file
+        .split(std::path::MAIN_SEPARATOR)
+        .map(|f| f.to_string())
+        .collect::<Vec<String>>();
+    let mut name = parts.get(parts.len() - 1).unwrap().clone();
+    #[cfg(target_os = "windows")]
+    {
+        name = name.replace(".dll", "");
+    }
+    #[cfg(target_os = "macos")]
+    {
+        name = name.replace(".dylib", "");
+    }
+    #[cfg(target_os = "linux")]
+    {
+        name = name.replace(".so", "");
+    }
+    LIBRARY_MANAGER.push_lib(name, (lib, true));
 }
 
 #[no_mangle]
@@ -110,9 +122,7 @@ pub extern "system" fn Java_net_ioixd_blackbox_Native_enablePlugin<'a>(
         .unwrap()
         .to_string_lossy()
         .to_string();
-    unsafe {
-        LIBRARY_MANAGER.set_enabled(file, true);
-    }
+    LIBRARY_MANAGER.set_enabled(file, true);
 }
 
 #[no_mangle]
@@ -126,9 +136,7 @@ pub extern "system" fn Java_net_ioixd_blackbox_Native_disablePlugin<'a>(
         .unwrap()
         .to_string_lossy()
         .to_string();
-    unsafe {
-        LIBRARY_MANAGER.set_enabled(file, false);
-    }
+    LIBRARY_MANAGER.set_enabled(file, false);
 }
 
 #[no_mangle]
@@ -136,7 +144,7 @@ pub extern "system" fn Java_net_ioixd_blackbox_Native_libraryNames<'a>(
     env: JNIEnv<'a>,
     _obj: JObject,
 ) -> JString<'a> {
-    unsafe { env.new_string(LIBRARY_MANAGER.library_names()).unwrap() }
+    env.new_string(LIBRARY_MANAGER.library_names()).unwrap()
 }
 
 #[no_mangle]
@@ -155,7 +163,7 @@ pub extern "system" fn Java_net_ioixd_blackbox_Native_libraryHasFunction<'a>(
         .to_string_lossy()
         .to_string();
 
-    let manager = unsafe { LIBRARY_MANAGER.libraries() };
+    let manager = LIBRARY_MANAGER.libraries();
     let lib = manager.get(&libname).unwrap().library();
     let func: Result<
         libloading::Symbol<unsafe extern "C" fn(JNIEnv<'_>, JObject<'_>)>,
@@ -195,7 +203,7 @@ pub extern "system" fn Java_net_ioixd_blackbox_Native_sendEvent<'a>(
         .to_string_lossy()
         .to_string();
 
-    let manager = unsafe { LIBRARY_MANAGER.libraries() };
+    let manager = LIBRARY_MANAGER.libraries();
     let lib = unwrap_option_or_java_error(
         &mut env,
         &libname,
@@ -245,7 +253,7 @@ pub extern "system" fn Java_net_ioixd_blackbox_Native_execute<'a>(
         .to_string_lossy()
         .to_string();
 
-    let manager = unsafe { LIBRARY_MANAGER.libraries() };
+    let manager = LIBRARY_MANAGER.libraries();
     let lib = unwrap_option_or_java_error(
         &mut env,
         &libname,
@@ -326,7 +334,6 @@ where
     match opt {
         Some(v) => v,
         None => {
-            panic!();
             throw_with_error(
                 &mut env,
                 "net/ioixd/blackbox/exceptions/NativeLibrarySymbolLoadException",
