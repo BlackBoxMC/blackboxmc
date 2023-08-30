@@ -1,111 +1,35 @@
-struct SwitchableLibrary {
-    library: RwLock<ManuallyDrop<Library>>,
-    enabled: RwLock<bool>,
-}
+pub mod loader;
+pub mod shared;
+pub mod wasm;
 
-impl SwitchableLibrary {
-    fn new(library: ManuallyDrop<Library>, enabled: bool) -> Self {
-        Self {
-            library: RwLock::new(library),
-            enabled: RwLock::new(enabled),
-        }
-    }
-    fn set_enabled(&self, enabled: bool) {
-        *self.enabled.write() = enabled;
-    }
-}
-
-struct LibraryManager {
-    loaded_libraries: RwLock<HashMap<String, SwitchableLibrary>>,
-}
-
-impl LibraryManager {
-    fn new() -> Self {
-        Self {
-            loaded_libraries: RwLock::new(HashMap::new()),
-        }
-    }
-    fn push_lib(&self, libname: String, lib: (ManuallyDrop<Library>, bool)) {
-        let libs = &mut self.loaded_libraries.write();
-        libs.insert(libname, SwitchableLibrary::new(lib.0, lib.1));
-    }
-    fn libraries(&self) -> RwLockReadGuard<HashMap<String, SwitchableLibrary>> {
-        self.loaded_libraries.read()
-    }
-    fn set_enabled(&self, file: String, enabled: bool) {
-        self.libraries().get(&file).unwrap().set_enabled(enabled);
-    }
-    fn library_names(&self) -> String {
-        self.libraries()
-            .iter()
-            .map(|f| f.0.clone())
-            .collect::<Vec<String>>()
-            .join(",")
-    }
-}
-
-static LIBRARY_MANAGER: Lazy<LibraryManager> = Lazy::new(|| LibraryManager::new());
+use std::{error::Error, fmt::Display};
 
 use jni::{
-    objects::{JClass, JObject, JString},
+    objects::{JObject, JString},
     sys::{jboolean, jint},
     JNIEnv,
 };
-use libloading::{Library, Symbol};
-use once_cell::sync::Lazy;
-use parking_lot::{Mutex, RwLock, RwLockReadGuard};
-
-use std::{collections::HashMap, error::Error, fmt::Display, mem::ManuallyDrop};
-
-fn load_library(path: String) -> Result<Library, libloading::Error> {
-    unsafe {
-        // Load and initialize library
-        #[cfg(target_os = "linux")]
-        let library: Library = {
-            // Load library with `RTLD_NOW | RTLD_NODELETE` to fix a SIGSEGV
-            ::libloading::os::unix::Library::open(Some(&path), 0x2 | 0x1000)?.into()
-        };
-        #[cfg(not(target_os = "linux"))]
-        let library = Library::new(&path)?;
-        Ok(library)
-    }
-}
+use loader::Loader;
+use shared::SharedLoader;
+use wasm::WASMLoader;
 
 #[no_mangle]
 pub extern "system" fn Java_net_ioixd_blackbox_Native_loadPlugin<'a>(
     mut env: JNIEnv<'a>,
     _obj: JObject,
     filename: JString,
+    wasm: jboolean,
 ) {
     let file = env
         .get_string(&filename)
         .unwrap()
         .to_string_lossy()
         .to_string();
-    let lib = load_library(file.clone());
-    if let Err(e) = &lib {
-        throw_libloading_error(&mut env, &file, e);
-        return;
+    if wasm == 1 {
+        WASMLoader::load_plugin(env, file)
+    } else {
+        SharedLoader::load_plugin(env, file)
     }
-    let lib = lib.unwrap();
-    let parts = file
-        .split(std::path::MAIN_SEPARATOR)
-        .map(|f| f.to_string())
-        .collect::<Vec<String>>();
-    let mut name = parts.get(parts.len() - 1).unwrap().clone();
-    #[cfg(target_os = "windows")]
-    {
-        name = name.replace(".dll", "");
-    }
-    #[cfg(target_os = "macos")]
-    {
-        name = name.replace(".dylib", "");
-    }
-    #[cfg(target_os = "linux")]
-    {
-        name = name.replace(".so", "");
-    }
-    LIBRARY_MANAGER.push_lib(name, (ManuallyDrop::new(lib), true));
 }
 
 #[no_mangle]
@@ -113,13 +37,18 @@ pub extern "system" fn Java_net_ioixd_blackbox_Native_enablePlugin<'a>(
     mut env: JNIEnv<'a>,
     _obj: JObject,
     filename: JString,
+    wasm: jboolean,
 ) {
     let file = env
         .get_string(&filename)
         .unwrap()
         .to_string_lossy()
         .to_string();
-    LIBRARY_MANAGER.set_enabled(file, true);
+    if wasm == 1 {
+        WASMLoader::enable_plugin(file)
+    } else {
+        SharedLoader::enable_plugin(file)
+    }
 }
 
 #[no_mangle]
@@ -127,21 +56,31 @@ pub extern "system" fn Java_net_ioixd_blackbox_Native_disablePlugin<'a>(
     mut env: JNIEnv<'a>,
     _obj: JObject,
     filename: JString,
+    wasm: jboolean,
 ) {
     let file = env
         .get_string(&filename)
         .unwrap()
         .to_string_lossy()
         .to_string();
-    LIBRARY_MANAGER.set_enabled(file, false);
+    if wasm == 1 {
+        WASMLoader::disable_plugin(file)
+    } else {
+        SharedLoader::disable_plugin(file)
+    }
 }
 
 #[no_mangle]
 pub extern "system" fn Java_net_ioixd_blackbox_Native_libraryNames<'a>(
     env: JNIEnv<'a>,
     _obj: JObject,
+    wasm: jboolean,
 ) -> JString<'a> {
-    env.new_string(LIBRARY_MANAGER.library_names()).unwrap()
+    if wasm == 1 {
+        WASMLoader::library_names(env)
+    } else {
+        SharedLoader::library_names(env)
+    }
 }
 
 #[no_mangle]
@@ -150,6 +89,7 @@ pub extern "system" fn Java_net_ioixd_blackbox_Native_libraryHasFunction<'a>(
     _obj: JObject,
     libname_raw: JString,
     funcname_raw: JString,
+    wasm: jboolean,
 ) -> jboolean {
     let libname_raw = env.get_string(&libname_raw);
     let libname = unwrap_result_or_java_error(&mut env, "unknown library", libname_raw)
@@ -160,27 +100,11 @@ pub extern "system" fn Java_net_ioixd_blackbox_Native_libraryHasFunction<'a>(
         .to_string_lossy()
         .to_string();
 
-    let manager = LIBRARY_MANAGER.libraries();
-    let lib = manager.get(&libname).unwrap().library.read();
-    let func: Result<
-        libloading::Symbol<unsafe extern "C" fn(JNIEnv<'_>, JObject<'_>)>,
-        libloading::Error,
-    > = unsafe { lib.get(funcname.as_bytes()) };
-    if let Err(e) = &func {
-        match e {
-            libloading::Error::DlSym { desc: _ } => {
-                return false.into();
-            }
-            libloading::Error::GetProcAddress { source: _ } => {
-                return false.into();
-            }
-            _ => {
-                throw_libloading_error(&mut env, &libname, &e);
-                return false.into();
-            }
-        }
+    if wasm == 1 {
+        WASMLoader::library_has_function(env, libname, funcname).into()
+    } else {
+        SharedLoader::library_has_function(env, libname, funcname).into()
     }
-    return true.into();
 }
 
 #[no_mangle]
@@ -190,6 +114,7 @@ pub extern "system" fn Java_net_ioixd_blackbox_Native_sendEvent<'a>(
     libname_raw: JString,
     funcname_raw: JString,
     ev: JObject,
+    wasm: jboolean,
 ) -> jboolean {
     let libname_raw = env.get_string(&libname_raw);
     let libname = unwrap_result_or_java_error(&mut env, "unknown library", libname_raw)
@@ -199,37 +124,11 @@ pub extern "system" fn Java_net_ioixd_blackbox_Native_sendEvent<'a>(
     let funcname = unwrap_result_or_java_error(&mut env, &libname, funcname_raw)
         .to_string_lossy()
         .to_string();
-
-    let manager = LIBRARY_MANAGER.libraries();
-    let lib = unwrap_option_or_java_error(
-        &mut env,
-        &libname,
-        &"library".to_string(),
-        manager.get(&libname),
-    )
-    .library
-    .read();
-    let func: Result<
-        libloading::Symbol<extern "C" fn(JNIEnv<'_>, JObject<'_>)>,
-        libloading::Error,
-    > = unsafe { lib.get(funcname.as_bytes()) };
-    if let Err(e) = &func {
-        match e {
-            libloading::Error::DlSym { desc: _ } => {
-                return false.into();
-            }
-            libloading::Error::GetProcAddress { source: _ } => {
-                return false.into();
-            }
-            _ => {
-                throw_libloading_error(&mut env, &libname, &e);
-                return false.into();
-            }
-        }
+    if wasm == 1 {
+        WASMLoader::send_event(env, libname, funcname, ev).into()
+    } else {
+        SharedLoader::send_event(env, libname, funcname, ev).into()
     }
-    let func = func.unwrap();
-    func(env, ev);
-    return true.into();
 }
 
 #[no_mangle]
@@ -241,6 +140,7 @@ pub extern "system" fn Java_net_ioixd_blackbox_Native_execute<'a>(
     address: jint,
     plugin: JObject,
     ev: JObject,
+    wasm: jboolean,
 ) -> JObject<'a> {
     let libname_raw = env.get_string(&libname_raw);
     let libname = unwrap_result_or_java_error(&mut env, "unknown library", libname_raw)
@@ -251,34 +151,10 @@ pub extern "system" fn Java_net_ioixd_blackbox_Native_execute<'a>(
         .to_string_lossy()
         .to_string();
 
-    let manager = LIBRARY_MANAGER.libraries();
-    let lib = unwrap_option_or_java_error(
-        &mut env,
-        &libname,
-        &format!("manager.get({})", &libname),
-        manager.get(&libname),
-    )
-    .library
-    .write();
-    let func: Result<
-        libloading::Symbol<
-            extern "C" fn(JNIEnv<'_>, jint, JObject<'_>, JObject<'_>) -> JObject<'a>,
-        >,
-        libloading::Error,
-    > = unsafe { lib.get(funcname.as_bytes()) };
-    if let Err(e) = &func {
-        match e {
-            _ => {
-                throw_libloading_error(&mut env, &libname, &e);
-            }
-        }
-    }
-    let func = func.unwrap();
-    if !plugin.is_null() && !ev.is_null() {
-        return func(env, address, plugin, ev);
+    if wasm == 1 {
+        WASMLoader::execute(env, libname, funcname, address, plugin, ev)
     } else {
-        println!("NULL");
-        return JObject::null();
+        SharedLoader::execute(env, libname, funcname, address, plugin, ev)
     }
 }
 
@@ -289,19 +165,27 @@ pub extern "system" fn Java_net_ioixd_blackbox_BiConsumerLink_acceptNative<'a>(
     this: JObject,
     obj1: JObject,
     obj2: JObject,
+    wasm: jboolean,
 ) {
-    || -> Result<(), Box<dyn Error>> {
-        let field = env.get_field(this, "address", "J");
-        let address_raw = unwrap_result_or_java_error(&mut env, "", field);
-        let address = address_raw.j()? as u64;
-        println!("{:#x}", address);
-        unsafe {
-            let func: BiConsumer = std::mem::transmute(address);
-            func(obj1, obj2);
-        }
-        Ok(())
-    }()
-    .unwrap();
+    if wasm == 1 {
+        throw_with_error(
+            &mut env,
+            "java/lang/UnsupportedOperationException",
+            "BiConsumerLinks aren't supported in WASM libraries yet",
+        );
+    } else {
+        || -> Result<(), Box<dyn Error>> {
+            let field = env.get_field(this, "address", "J");
+            let address_raw = unwrap_result_or_java_error(&mut env, "", field);
+            let address = address_raw.j()? as u64;
+            unsafe {
+                let func: BiConsumer = std::mem::transmute(address);
+                func(obj1, obj2);
+            }
+            Ok(())
+        }()
+        .unwrap();
+    }
 }
 
 pub fn unwrap_result_or_java_error<V, E, S>(
@@ -394,8 +278,12 @@ pub fn throw_libloading_error(mut env: &mut JNIEnv, libname: &String, e: &libloa
     }
 }
 
-pub fn throw_with_error(env: &mut JNIEnv, exception_name: &str, exception_message: String) {
-    let er = env.throw((exception_name, exception_message));
+pub fn throw_with_error(
+    env: &mut JNIEnv,
+    exception_name: impl Into<String>,
+    exception_message: impl Into<String>,
+) {
+    let er = env.throw((exception_name.into().as_str(), exception_message.into()));
     if let Err(_) = er {
         env.exception_describe().unwrap();
     }

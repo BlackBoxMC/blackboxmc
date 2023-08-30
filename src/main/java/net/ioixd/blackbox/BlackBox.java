@@ -11,26 +11,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfoList;
-import net.ioixd.blackbox.extendables.ExtendableBiomeProvider;
-import net.ioixd.blackbox.extendables.ExtendableBlockPopulator;
-import net.ioixd.blackbox.extendables.ExtendableBukkitRunnable;
-import net.ioixd.blackbox.extendables.ExtendableChunkGenerator;
-import net.ioixd.blackbox.extendables.ExtendableCommandExecutor;
-import net.ioixd.blackbox.extendables.ExtendableConfigurationSerializable;
-import net.ioixd.blackbox.extendables.ExtendableConsumer;
-import net.ioixd.blackbox.extendables.ExtendableConversationCanceller;
-import net.ioixd.blackbox.extendables.ExtendableConversationPrefix;
-import net.ioixd.blackbox.extendables.ExtendableHelpTopic;
-import net.ioixd.blackbox.extendables.ExtendableHelpTopicFactory;
-import net.ioixd.blackbox.extendables.ExtendableMapRenderer;
-import net.ioixd.blackbox.extendables.ExtendableMetadataValue;
-import net.ioixd.blackbox.extendables.ExtendableNoiseGenerator;
-import net.ioixd.blackbox.extendables.ExtendablePersistentDataType;
-import net.ioixd.blackbox.extendables.ExtendablePlugin;
-import net.ioixd.blackbox.extendables.ExtendablePluginBase;
-import net.ioixd.blackbox.extendables.ExtendablePluginLoader;
-import net.ioixd.blackbox.extendables.ExtendableTabCompleter;
-import net.ioixd.blackbox.extendables.ExtendableTabExecutor;
 import net.ioixd.blackbox.extendables.Misc;
 
 import java.io.File;
@@ -125,7 +105,6 @@ public final class BlackBox extends JavaPlugin {
         clsgraph.initializeLoadedClasses();
         ClassInfoList info = clsgraph.scan().getSubclasses(Event.class.getName());
         info.forEach(cls -> {
-            System.out.println(cls.getName());
             cls.loadClass(true);
         });
         if (isPaper) {
@@ -152,8 +131,9 @@ public final class BlackBox extends JavaPlugin {
         this.setEnabled(false);
     }
 
-    public Object newExtendable(int address, String className, String name, String inLibName) throws Exception {
-        return Misc.newExtendable(address, (Plugin) this, className, name, inLibName);
+    public Object newExtendable(int address, String className, String name, String inLibName, boolean wasm)
+            throws Exception {
+        return Misc.newExtendable(address, (Plugin) this, className, name, inLibName, wasm);
     }
 
 }

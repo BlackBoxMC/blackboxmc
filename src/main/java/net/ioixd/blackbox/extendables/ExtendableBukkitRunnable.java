@@ -11,6 +11,7 @@ public class ExtendableBukkitRunnable extends BukkitRunnable {
     public String inLibName;
     public Plugin plugin;
     public int address;
+    public boolean wasm;
 
     @Override
     public synchronized BukkitTask runTask(Plugin arg0) throws IllegalArgumentException, IllegalStateException {
@@ -19,7 +20,7 @@ public class ExtendableBukkitRunnable extends BukkitRunnable {
             result = Misc.tryExecute(this.inLibName, this.name, "BukkitTask", "runTask",
                     address, plugin, new Object[] {
                             arg0
-                    }, false, true);
+                    }, false, this.wasm);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -38,7 +39,7 @@ public class ExtendableBukkitRunnable extends BukkitRunnable {
             result = Misc.tryExecute(this.inLibName, this.name, "BukkitTask", "runTaskAsynchronously",
                     address, plugin, new Object[] {
                             arg0
-                    }, false, true);
+                    }, false, this.wasm);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -57,7 +58,7 @@ public class ExtendableBukkitRunnable extends BukkitRunnable {
             result = Misc.tryExecute(this.inLibName, this.name, "BukkitTask", "runTaskLater",
                     address, plugin, new Object[] {
                             arg0, arg1
-                    }, false, true);
+                    }, false, this.wasm);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -77,7 +78,7 @@ public class ExtendableBukkitRunnable extends BukkitRunnable {
                     "runTaskLaterAsynchronously",
                     address, plugin, new Object[] {
                             arg0, arg1
-                    }, false, true);
+                    }, false, this.wasm);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -96,7 +97,7 @@ public class ExtendableBukkitRunnable extends BukkitRunnable {
             result = Misc.tryExecute(this.inLibName, this.name, "BukkitTask", "runTaskTimer",
                     address, plugin, new Object[] {
                             arg0, arg1, arg2
-                    }, false, true);
+                    }, false, this.wasm);
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
@@ -116,7 +117,7 @@ public class ExtendableBukkitRunnable extends BukkitRunnable {
                     "runTaskTimerAsynchronously",
                     address, plugin, new Object[] {
                             arg0, arg1, arg2
-                    }, false, true);
+                    }, false, this.wasm);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -127,19 +128,20 @@ public class ExtendableBukkitRunnable extends BukkitRunnable {
         }
     }
 
-    public ExtendableBukkitRunnable(int address, Plugin plugin, String name, String inLibName)
+    public ExtendableBukkitRunnable(int address, Plugin plugin, String name, String inLibName, boolean wasm)
             throws MissingFunctionException {
         this.plugin = plugin;
         this.address = address;
         this.name = name;
         this.inLibName = inLibName;
-        Misc.throwIfFuncsNotBound(this.inLibName, this.name, this.getClass());
+        this.wasm = wasm;
+        Misc.throwIfFuncsNotBound(this.inLibName, this.name, this.getClass(), this.wasm);
     }
 
     public void run() {
         try {
             Misc.tryExecute(this.inLibName, this.name, "BukkitRunnable", "run",
-                    address, plugin, new Object[] {}, true, false);
+                    address, plugin, new Object[] {}, true, this.wasm);
         } catch (Exception ex) {
             ex.printStackTrace();
         }

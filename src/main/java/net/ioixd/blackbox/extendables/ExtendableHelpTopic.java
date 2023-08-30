@@ -9,14 +9,16 @@ public class ExtendableHelpTopic extends HelpTopic {
     public String inLibName;
     public Plugin plugin;
     public int address;
+    public boolean wasm;
 
-    public ExtendableHelpTopic(int address, Plugin plugin, String name, String inLibName) {
+    public ExtendableHelpTopic(int address, Plugin plugin, String name, String inLibName, boolean wasm) {
 
         this.plugin = plugin;
         this.address = address;
         this.name = name;
         this.inLibName = inLibName;
-        Misc.throwIfFuncsNotBound(this.inLibName, this.name, this.getClass());
+        this.wasm = wasm;
+        Misc.throwIfFuncsNotBound(this.inLibName, this.name, this.getClass(), this.wasm);
     }
 
     @Override
@@ -26,7 +28,7 @@ public class ExtendableHelpTopic extends HelpTopic {
             result = Misc.tryExecute(this.inLibName, this.name, "HelpTopic", "amendCanSee",
                     address, plugin, new Object[] {
                             arg0
-                    }, false, false);
+                    }, false, this.wasm);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -42,7 +44,7 @@ public class ExtendableHelpTopic extends HelpTopic {
             result = Misc.tryExecute(this.inLibName, this.name, "HelpTopic", "amendTopic",
                     address, plugin, new Object[] {
                             arg0, arg1
-                    }, false, false);
+                    }, false, this.wasm);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -58,7 +60,7 @@ public class ExtendableHelpTopic extends HelpTopic {
             result = Misc.tryExecute(this.inLibName, this.name, "HelpTopic", "applyAmendment",
                     address, plugin, new Object[] {
                             arg0, arg1
-                    }, false, true);
+                    }, false, this.wasm);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -76,7 +78,7 @@ public class ExtendableHelpTopic extends HelpTopic {
             result = Misc.tryExecute(this.inLibName, this.name, "HelpTopic", "getFullText",
                     address, plugin, new Object[] {
                             arg0
-                    }, false, true);
+                    }, false, this.wasm);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -92,7 +94,7 @@ public class ExtendableHelpTopic extends HelpTopic {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "HelpTopic", "getName",
-                    address, plugin, new Object[] {}, false, true);
+                    address, plugin, new Object[] {}, false, this.wasm);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -108,7 +110,7 @@ public class ExtendableHelpTopic extends HelpTopic {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "HelpTopic", "getShortText",
-                    address, plugin, new Object[] {}, false, true);
+                    address, plugin, new Object[] {}, false, this.wasm);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -123,7 +125,7 @@ public class ExtendableHelpTopic extends HelpTopic {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "HelpTopic", "canSee",
-                    address, plugin, new Object[] { arg0 }, true, true);
+                    address, plugin, new Object[] { arg0 }, true, this.wasm);
         } catch (Exception ex) {
             ex.printStackTrace();
         }

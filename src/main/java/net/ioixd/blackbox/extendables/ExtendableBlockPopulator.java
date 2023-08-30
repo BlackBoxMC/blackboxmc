@@ -12,6 +12,7 @@ public class ExtendableBlockPopulator extends BlockPopulator {
     String name;
     Plugin plugin;
     public int address;
+    public boolean wasm;
 
     @Override
     public void populate(WorldInfo worldInfo, Random random, int chunkX, int chunkZ, LimitedRegion limitedRegion) {
@@ -20,7 +21,7 @@ public class ExtendableBlockPopulator extends BlockPopulator {
             result = Misc.tryExecute(this.inLibName, this.name, "BlockPopulator", "populate",
                     address, plugin, new Object[] {
                             worldInfo, random, chunkX, chunkZ, limitedRegion
-                    }, false, false);
+                    }, false, this.wasm);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -29,11 +30,12 @@ public class ExtendableBlockPopulator extends BlockPopulator {
         }
     }
 
-    public ExtendableBlockPopulator(int address, Plugin plugin, String name, String inLibName) {
+    public ExtendableBlockPopulator(int address, Plugin plugin, String name, String inLibName, boolean wasm) {
 
         this.plugin = plugin;
         this.address = address;
         this.name = name;
         this.inLibName = inLibName;
+        this.wasm = wasm;
     }
 }

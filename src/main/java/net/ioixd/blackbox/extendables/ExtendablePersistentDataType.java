@@ -8,21 +8,23 @@ public class ExtendablePersistentDataType implements PersistentDataType {
     public String inLibName;
     public Plugin plugin;
     public int address;
+    public boolean wasm;
 
-    public ExtendablePersistentDataType(int address, Plugin plugin, String name, String inLibName) {
+    public ExtendablePersistentDataType(int address, Plugin plugin, String name, String inLibName, boolean wasm) {
 
         this.plugin = plugin;
         this.address = address;
         this.name = name;
         this.inLibName = inLibName;
-        Misc.throwIfFuncsNotBound(this.inLibName, this.name, this.getClass());
+        this.wasm = wasm;
+        Misc.throwIfFuncsNotBound(this.inLibName, this.name, this.getClass(), this.wasm);
     }
 
     public java.lang.Class<?> getPrimitiveType() {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "PersistentDataType", "getPrimitiveType",
-                    address, plugin, new Object[] {}, true, true);
+                    address, plugin, new Object[] {}, true, this.wasm);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -33,7 +35,7 @@ public class ExtendablePersistentDataType implements PersistentDataType {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "PersistentDataType", "getComplexType",
-                    address, plugin, new Object[] {}, true, true);
+                    address, plugin, new Object[] {}, true, this.wasm);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -45,7 +47,7 @@ public class ExtendablePersistentDataType implements PersistentDataType {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "PersistentDataType", "toPrimtive",
-                    address, plugin, new Object[] { arg0, arg1 }, true, true);
+                    address, plugin, new Object[] { arg0, arg1 }, true, this.wasm);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -57,7 +59,7 @@ public class ExtendablePersistentDataType implements PersistentDataType {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "PersistentDataType", "fromPrimitive",
-                    address, plugin, new Object[] { arg0, arg1 }, true, true);
+                    address, plugin, new Object[] { arg0, arg1 }, true, this.wasm);
         } catch (Exception ex) {
             ex.printStackTrace();
         }

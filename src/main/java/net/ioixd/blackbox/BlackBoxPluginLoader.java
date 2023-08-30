@@ -25,14 +25,17 @@ import org.bukkit.plugin.RegisteredListener;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Represents a BlackBox plugin loader, allowing plugins in the form of .dll and
- * .so
+ * Represents a BlackBox plugin loader, allowing plugins in the form of .dll,
+ * .so, and .wasm
  */
 public final class BlackBoxPluginLoader implements PluginLoader {
     final Server server;
     private HashMap<Plugin, BlackBoxPlugin> libNameMap = new HashMap<>();
 
-    public static final Pattern[] fileFilters = new Pattern[] { Pattern.compile("^(.*)\\" + getFileExtension() + "$") };
+    private boolean wasm = false;
+
+    public static final Pattern[] fileFilters = new Pattern[] {
+            Pattern.compile("^((.*)\\" + getFileExtension() + "|\\.wasm)$") };
 
     public BlackBoxPluginLoader(@NotNull Server instance) {
         Preconditions.checkArgument(instance != null, "Server cannot be null");
@@ -57,12 +60,16 @@ public final class BlackBoxPluginLoader implements PluginLoader {
             return null;
         }
 
-        Native.loadPlugin(library);
+        if (file.getName().endsWith(".wasm")) {
+            this.wasm = true;
+        }
+
+        Native.loadPlugin(library, this.wasm);
 
         server.getLogger().info("Loading native plugin " + libraryName);
 
         BlackBoxPlugin plugin = new BlackBoxPlugin(libraryName,
-                (BlackBox) server.getPluginManager().getPlugin("BlackBox"), this);
+                (BlackBox) server.getPluginManager().getPlugin("BlackBox"), this, this.wasm);
         libNameMap.put(plugin, plugin);
         return plugin;
     }
@@ -70,7 +77,7 @@ public final class BlackBoxPluginLoader implements PluginLoader {
     @Override
     public void enablePlugin(@NotNull final Plugin plugin) {
         if (libNameMap.containsKey(plugin)) {
-            Native.enablePlugin(libNameMap.get(plugin).getInnerLibraryName());
+            Native.enablePlugin(libNameMap.get(plugin).getInnerLibraryName(), this.wasm);
         } else {
             server.getLogger().severe("BlackBoxPluginLoader tried to enable plugin that isn't registered in it.");
         }
@@ -79,7 +86,7 @@ public final class BlackBoxPluginLoader implements PluginLoader {
     @Override
     public void disablePlugin(@NotNull Plugin plugin) {
         if (libNameMap.containsKey(plugin)) {
-            Native.disablePlugin(libNameMap.get(plugin).getInnerLibraryName());
+            Native.disablePlugin(libNameMap.get(plugin).getInnerLibraryName(), this.wasm);
         } else {
             server.getLogger().severe("BlackBoxPluginLoader tried to disable plugin that isn't registered in it.");
         }

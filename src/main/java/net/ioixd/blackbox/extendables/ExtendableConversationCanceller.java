@@ -8,14 +8,16 @@ public class ExtendableConversationCanceller implements ConversationCanceller {
     public String inLibName;
     public Plugin plugin;
     public int address;
+    public boolean wasm;
 
-    public ExtendableConversationCanceller(int address, Plugin plugin, String name, String inLibName) {
+    public ExtendableConversationCanceller(int address, Plugin plugin, String name, String inLibName, boolean wasm) {
 
         this.plugin = plugin;
         this.address = address;
         this.name = name;
         this.inLibName = inLibName;
-        Misc.throwIfFuncsNotBound(this.inLibName, this.name, this.getClass());
+        this.wasm = wasm;
+        Misc.throwIfFuncsNotBound(this.inLibName, this.name, this.getClass(), this.wasm);
     }
 
     public void setConversation(org.bukkit.conversations.Conversation arg0) {
@@ -25,7 +27,7 @@ public class ExtendableConversationCanceller implements ConversationCanceller {
                     "setConversation",
                     address, plugin, new Object[] {
                             arg0
-                    }, true, false);
+                    }, true, this.wasm);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -38,7 +40,7 @@ public class ExtendableConversationCanceller implements ConversationCanceller {
                     "cancelBasedOnInput",
                     address, plugin, new Object[] {
                             arg0, arg1
-                    }, true, true);
+                    }, true, this.wasm);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -49,7 +51,7 @@ public class ExtendableConversationCanceller implements ConversationCanceller {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "ConversationCanceller", "clone",
-                    address, plugin, new Object[] {}, true, true);
+                    address, plugin, new Object[] {}, true, this.wasm);
         } catch (Exception ex) {
             ex.printStackTrace();
         }

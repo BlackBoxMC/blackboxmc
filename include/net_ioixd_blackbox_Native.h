@@ -10,26 +10,26 @@ extern "C" {
 /*
  * Class:     net_ioixd_blackbox_Native
  * Method:    loadPlugin
- * Signature: (Ljava/lang/String;)Ljava/lang/String;
+ * Signature: (Ljava/lang/String;Z)Ljava/lang/String;
  */
 JNIEXPORT jstring JNICALL Java_net_ioixd_blackbox_Native_loadPlugin
-  (JNIEnv *, jclass, jstring);
+  (JNIEnv *, jclass, jstring, jboolean);
 
 /*
  * Class:     net_ioixd_blackbox_Native
  * Method:    enablePlugin
- * Signature: (Ljava/lang/String;)V
+ * Signature: (Ljava/lang/String;Z)V
  */
 JNIEXPORT void JNICALL Java_net_ioixd_blackbox_Native_enablePlugin
-  (JNIEnv *, jclass, jstring);
+  (JNIEnv *, jclass, jstring, jboolean);
 
 /*
  * Class:     net_ioixd_blackbox_Native
  * Method:    disablePlugin
- * Signature: (Ljava/lang/String;)V
+ * Signature: (Ljava/lang/String;Z)V
  */
 JNIEXPORT void JNICALL Java_net_ioixd_blackbox_Native_disablePlugin
-  (JNIEnv *, jclass, jstring);
+  (JNIEnv *, jclass, jstring, jboolean);
 
 /*
  * Class:     net_ioixd_blackbox_Native
@@ -42,26 +42,26 @@ JNIEXPORT jstring JNICALL Java_net_ioixd_blackbox_Native_libraryNames
 /*
  * Class:     net_ioixd_blackbox_Native
  * Method:    libraryHasFunction
- * Signature: (Ljava/lang/String;Ljava/lang/String;)Z
+ * Signature: (Ljava/lang/String;Ljava/lang/String;Z)Z
  */
 JNIEXPORT jboolean JNICALL Java_net_ioixd_blackbox_Native_libraryHasFunction
-  (JNIEnv *, jclass, jstring, jstring);
+  (JNIEnv *, jclass, jstring, jstring, jboolean);
 
 /*
  * Class:     net_ioixd_blackbox_Native
  * Method:    sendEvent
- * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Object;)Z
+ * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Object;Z)Z
  */
 JNIEXPORT jboolean JNICALL Java_net_ioixd_blackbox_Native_sendEvent
-  (JNIEnv *, jclass, jstring, jstring, jobject);
+  (JNIEnv *, jclass, jstring, jstring, jobject, jboolean);
 
 /*
  * Class:     net_ioixd_blackbox_Native
  * Method:    execute
- * Signature: (Ljava/lang/String;Ljava/lang/String;ILorg/bukkit/plugin/Plugin;[Ljava/lang/Object;)Ljava/lang/Object;
+ * Signature: (Ljava/lang/String;Ljava/lang/String;ILorg/bukkit/plugin/Plugin;[Ljava/lang/Object;Z)Ljava/lang/Object;
  */
 JNIEXPORT jobject JNICALL Java_net_ioixd_blackbox_Native_execute
-  (JNIEnv *, jclass, jstring, jstring, jint, jobject, jobjectArray);
+  (JNIEnv *, jclass, jstring, jstring, jint, jobject, jobjectArray, jboolean);
 
 #ifdef __cplusplus
 }

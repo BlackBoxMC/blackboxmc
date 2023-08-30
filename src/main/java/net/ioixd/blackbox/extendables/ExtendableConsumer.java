@@ -8,14 +8,16 @@ public class ExtendableConsumer implements Consumer {
     public String inLibName;
     public Plugin plugin;
     public int address;
+    public boolean wasm;
 
-    public ExtendableConsumer(int address, Plugin plugin, String name, String inLibName) {
+    public ExtendableConsumer(int address, Plugin plugin, String name, String inLibName, boolean wasm) {
 
         this.plugin = plugin;
         this.address = address;
         this.name = name;
         this.inLibName = inLibName;
-        Misc.throwIfFuncsNotBound(this.inLibName, this.name, this.getClass());
+        this.wasm = wasm;
+        Misc.throwIfFuncsNotBound(this.inLibName, this.name, this.getClass(), this.wasm);
     }
 
     public void accept(java.lang.Object arg0) {
@@ -24,7 +26,7 @@ public class ExtendableConsumer implements Consumer {
             result = Misc.tryExecute(this.inLibName, this.name, "Consumer", "accept",
                     address, plugin, new Object[] {
                             arg0
-                    }, true, false);
+                    }, true, this.wasm);
         } catch (Exception ex) {
             ex.printStackTrace();
         }

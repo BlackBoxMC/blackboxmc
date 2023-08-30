@@ -47,17 +47,21 @@ public class BlackBoxPlugin implements Plugin {
     private FileConfiguration newConfig = null;
     private File configFile = null;
 
+    private boolean wasm = false;
+
     public BlackBoxPluginListener listener;
 
     public class BlackBoxPluginListener implements Listener {
         BlackBoxPlugin plugin;
         RegisteredListener registeredListener;
         String library;
+        boolean wasm;
 
-        public BlackBoxPluginListener(BlackBoxPlugin plugin, String library) {
+        public BlackBoxPluginListener(BlackBoxPlugin plugin, String library, boolean wasm) {
             this.plugin = plugin;
             this.library = library;
             this.registeredListener = new RegisteredListener(this, this::onEvent, EventPriority.NORMAL, plugin, false);
+            this.wasm = wasm;
             for (HandlerList handler : HandlerList.getHandlerLists()) {
                 handler.unregister(this);
             }
@@ -71,12 +75,12 @@ public class BlackBoxPlugin implements Plugin {
             String name = event.getEventName();
             String hookName = "__on__" + name;
             try {
-                boolean result = Native.libraryHasFunction(library, hookName);
+                boolean result = Native.libraryHasFunction(library, hookName, this.wasm);
                 if (result == false) {
                     HandlerList handler = event.getHandlers();
                     handler.unregister(registeredListener);
                 } else {
-                    Native.sendEvent(library, hookName, event);
+                    Native.sendEvent(library, hookName, event, this.wasm);
                 }
             } catch (Exception ex) {
                 this.plugin.getLogger().severe(ex.toString());
@@ -84,9 +88,9 @@ public class BlackBoxPlugin implements Plugin {
         }
     }
 
-    BlackBoxPlugin(String library, BlackBox parent, PluginLoader loader) {
+    BlackBoxPlugin(String library, BlackBox parent, PluginLoader loader, boolean wasm) {
         this.library = library;
-        this.listener = new BlackBoxPluginListener(this, this.library);
+        this.listener = new BlackBoxPluginListener(this, this.library, this.wasm);
         this.isEnabled = true;
         this.naggable = true;
         this.parent = parent;
@@ -97,17 +101,19 @@ public class BlackBoxPlugin implements Plugin {
         }
         this.dataFolder = Paths.get(pluginsFolder.getPath(), this.library).toFile();
         this.loader = loader;
+        this.wasm = wasm;
         this.file = new File(this.library);
     }
 
-    public Object newExtendable(int address, String className, String name, String inLibName) throws Exception {
-        return Misc.newExtendable(address, (Plugin) this, className, name, inLibName);
+    public Object newExtendable(int address, String className, String name, String inLibName, boolean wasm)
+            throws Exception {
+        return Misc.newExtendable(address, (Plugin) this, className, name, inLibName, this.wasm);
     }
 
     public void updateEventListeners() {
         this.listener.registeredListener = null;
         this.listener = null;
-        this.listener = new BlackBoxPluginListener(this, this.library);
+        this.listener = new BlackBoxPluginListener(this, this.library, this.wasm);
     }
 
     public String getInnerLibraryName() {
@@ -121,9 +127,9 @@ public class BlackBoxPlugin implements Plugin {
 
     Object execNative(String functionName, Object[] objects) {
         try {
-            boolean hasFunc = Native.libraryHasFunction(library, functionName);
+            boolean hasFunc = Native.libraryHasFunction(library, functionName, this.wasm);
             if (hasFunc) {
-                return Native.execute(this.library, functionName, 0, this, objects);
+                return Native.execute(this.library, functionName, 0, this, objects, this.wasm);
             } else {
                 // default
                 return null;

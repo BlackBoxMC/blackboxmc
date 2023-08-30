@@ -8,21 +8,24 @@ public class ExtendableConfigurationSerializable implements ConfigurationSeriali
     public String inLibName;
     public Plugin plugin;
     public int address;
+    public boolean wasm;
 
-    public ExtendableConfigurationSerializable(int address, Plugin plugin, String name, String inLibName) {
+    public ExtendableConfigurationSerializable(int address, Plugin plugin, String name, String inLibName,
+            boolean wasm) {
 
         this.plugin = plugin;
         this.address = address;
         this.name = name;
         this.inLibName = inLibName;
-        Misc.throwIfFuncsNotBound(this.inLibName, this.name, this.getClass());
+        this.wasm = wasm;
+        Misc.throwIfFuncsNotBound(this.inLibName, this.name, this.getClass(), this.wasm);
     }
 
     public java.util.Map<java.lang.String, java.lang.Object> serialize() {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "ConfigurationSerializable", "serialize",
-                    address, plugin, new Object[] {}, true, true);
+                    address, plugin, new Object[] {}, true, this.wasm);
         } catch (Exception ex) {
             ex.printStackTrace();
         }

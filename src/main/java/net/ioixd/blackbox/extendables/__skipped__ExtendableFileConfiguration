@@ -9,23 +9,25 @@ public class __skipped__ExtendableFileConfiguration extends FileConfiguration {
     public String inLibName;
 	public Plugin plugin;
 	public int address;
+	public boolean wasm;
 	
     public BlackBox blackBox;
 
-    __skipped__ExtendableFileConfiguration(Plugin blackBox, String name, String inLibName) {
+    __skipped__ExtendableFileConfiguration(Plugin blackBox, String name, String inLibName, boolean wasm) {
         this.blackBox = (BlackBox) blackBox;
         this.plugin = plugin;
 		this.address = address;
 		this.name = name;
         this.inLibName = inLibName;
-        Misc.throwIfFuncsNotBound(this.inLibName, this.name, this.getClass());
+		this.wasm = wasm;
+        Misc.throwIfFuncsNotBound(this.inLibName, this.name, this.getClass(), this.wasm);
     }
 
     public java.lang.String saveToString() {
         Object result = null;
         try {
             result = Misc.tryExecute(this.inLibName, this.name, "FileConfiguration", "saveToString",
-                    new Object[] {plugin,}, true);
+                    new Object[] {plugin,},true,this.wasm);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -35,7 +37,7 @@ public class __skipped__ExtendableFileConfiguration extends FileConfiguration {
     public void loadFromString(java.lang.String arg0) {
         try {
             Misc.tryExecute(this.inLibName, this.name, "FileConfiguration", "loadToString",
-                    new Object[] {plugin, arg0 }, true);
+                    new Object[] {plugin, arg0 },true,this.wasm);
         } catch (Exception ex) {
             ex.printStackTrace();
         }

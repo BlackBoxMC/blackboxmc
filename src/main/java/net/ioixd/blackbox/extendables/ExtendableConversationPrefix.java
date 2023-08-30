@@ -8,14 +8,16 @@ public class ExtendableConversationPrefix implements ConversationPrefix {
     public String inLibName;
     public Plugin plugin;
     public int address;
+    public boolean wasm;
 
-    public ExtendableConversationPrefix(int address, Plugin plugin, String name, String inLibName) {
+    public ExtendableConversationPrefix(int address, Plugin plugin, String name, String inLibName, boolean wasm) {
 
         this.plugin = plugin;
         this.address = address;
         this.name = name;
         this.inLibName = inLibName;
-        Misc.throwIfFuncsNotBound(this.inLibName, this.name, this.getClass());
+        this.wasm = wasm;
+        Misc.throwIfFuncsNotBound(this.inLibName, this.name, this.getClass(), this.wasm);
     }
 
     public java.lang.String getPrefix(org.bukkit.conversations.ConversationContext arg0) {
@@ -24,7 +26,7 @@ public class ExtendableConversationPrefix implements ConversationPrefix {
             result = Misc.tryExecute(this.inLibName, this.name, "ConversationPrefix", "getPrefix",
                     address, plugin, new Object[] {
                             arg0
-                    }, true, true);
+                    }, true, this.wasm);
         } catch (Exception ex) {
             ex.printStackTrace();
         }

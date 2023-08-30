@@ -9,22 +9,24 @@ public class ExtendablePrompt implements Prompt {
     public String inLibName;
     public Plugin plugin;
     public int address;
+    public boolean wasm;
 
-    ExtendablePrompt(Plugin plugin, String name, String inLibName) {
+    ExtendablePrompt(Plugin plugin, String name, String inLibName, boolean wasm) {
         this.plugin = plugin;
         this.address = address;
         this.name = name;
         this.inLibName = inLibName;
-        Misc.throwIfFuncsNotBound(this.inLibName, this.name, this.getClass());
+        this.wasm = wasm;
+        Misc.throwIfFuncsNotBound(this.inLibName, this.name, this.getClass(), this.wasm);
     }
 
     public java.lang.String getPromptText(org.bukkit.conversations.ConversationContext arg0) {
         Object result = null;
         try {
-            result = Native.execute(this.inLibName, "__extends__Prompt__" + this.name + "__getPromptText",
+            result = Misc.tryExecute(this.inLibName, this.name, "Prompt", "getPromptText",
                     address, plugin, new Object[] {
                             arg0
-                    });
+                    }, false, this.wasm);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -34,10 +36,10 @@ public class ExtendablePrompt implements Prompt {
     public boolean blocksForInput(org.bukkit.conversations.ConversationContext arg0) {
         Object result = null;
         try {
-            result = Native.execute(this.inLibName, "__extends__Prompt__" + this.name + "__blocksForInput",
+            result = Misc.tryExecute(this.inLibName, this.name, "Prompt", "blocksForInput",
                     address, plugin, new Object[] {
                             arg0
-                    });
+                    }, false, this.wasm);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -48,10 +50,10 @@ public class ExtendablePrompt implements Prompt {
             java.lang.String arg1) {
         Object result = null;
         try {
-            result = Native.execute(this.inLibName, "__extends__Prompt__" + this.name + "__acceptInput",
+            result = Misc.tryExecute(this.inLibName, this.name, "Prompt", "acceptInput",
                     address, plugin, new Object[] {
                             arg0, arg1
-                    });
+                    }, false, this.wasm);
         } catch (Exception ex) {
             ex.printStackTrace();
         }

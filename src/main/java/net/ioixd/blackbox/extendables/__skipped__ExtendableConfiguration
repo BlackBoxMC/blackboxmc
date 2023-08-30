@@ -12,20 +12,22 @@ public class ExtendableConfiguration implements Configuration {
     public String inLibName;
 	public Plugin plugin;
 	public int address;
+	public boolean wasm;
 	
     public BlackBox blackBox;
 
-    ExtendableConfiguration(BlackBox blackBox, String name, String inLibName) {
+    ExtendableConfiguration(BlackBox blackBox, String name, String inLibName, boolean wasm) {
         this.blackBox = blackBox;
         this.plugin = plugin;
 		this.address = address;
 		this.name = name;
         this.inLibName = inLibName;
+		this.wasm = wasm;
     }
 
     void tryExecute(String funcName, Object[] objects) {
         try {
-            Native.execute(this.inLibName, funcName, objects);
+            Misc.tryExecute(this.inLibName, funcName, objects,s);
         } catch(Exception ex) {
             this.blackBox.getLogger().severe(ex.toString());
             this.blackBox.getLogger().severe("Disabling self");
@@ -34,9 +36,9 @@ public class ExtendableConfiguration implements Configuration {
     }
 	public void addDefault(java.lang.String arg0, java.lang.Object arg1) {
        try {
-           Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__addDefault", new Object[] {plugin,
+           Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__addDefault", new Object[] {plugin,
                arg0, arg1
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -46,9 +48,9 @@ public class ExtendableConfiguration implements Configuration {
 	public org.bukkit.configuration.Configuration getDefaults() {
        Object result = null;
        try {
-           result = Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__getDefaults", new Object[] {plugin,
+           result = Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__getDefaults", new Object[] {plugin,
                
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -58,9 +60,9 @@ public class ExtendableConfiguration implements Configuration {
     }
 	public void addDefaults(java.util.Map<String, Object> arg0) {
        try {
-           Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__addDefaults", new Object[] {plugin,
+           Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__addDefaults", new Object[] {plugin,
                arg0
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -69,9 +71,9 @@ public class ExtendableConfiguration implements Configuration {
     }
 	public void addDefaults(org.bukkit.configuration.Configuration arg0) {
        try {
-           Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__addDefaults", new Object[] {plugin,
+           Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__addDefaults", new Object[] {plugin,
                arg0
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -80,9 +82,9 @@ public class ExtendableConfiguration implements Configuration {
     }
 	public void setDefaults(org.bukkit.configuration.Configuration arg0) {
        try {
-           Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__setDefaults", new Object[] {plugin,
+           Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__setDefaults", new Object[] {plugin,
                arg0
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -92,9 +94,9 @@ public class ExtendableConfiguration implements Configuration {
 	public org.bukkit.configuration.ConfigurationOptions options() {
        Object result = null;
        try {
-           result = Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__options", new Object[] {plugin,
+           result = Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__options", new Object[] {plugin,
                
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -105,9 +107,9 @@ public class ExtendableConfiguration implements Configuration {
 	public java.lang.String getString(java.lang.String arg0) {
        Object result = null;
        try {
-           result = Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__getString", new Object[] {plugin,
+           result = Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__getString", new Object[] {plugin,
                arg0
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -118,9 +120,9 @@ public class ExtendableConfiguration implements Configuration {
 	public java.lang.String getString(java.lang.String arg0, java.lang.String arg1) {
        Object result = null;
        try {
-           result = Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__getString", new Object[] {plugin,
+           result = Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__getString", new Object[] {plugin,
                arg0, arg1
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -131,9 +133,9 @@ public class ExtendableConfiguration implements Configuration {
 	public java.util.Set<java.lang.String> getKeys(boolean arg0) {
        Object result = null;
        try {
-           result = Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__getKeys", new Object[] {plugin,
+           result = Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__getKeys", new Object[] {plugin,
                arg0
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -144,9 +146,9 @@ public class ExtendableConfiguration implements Configuration {
 	public org.bukkit.Color getColor(java.lang.String arg0) {
        Object result = null;
        try {
-           result = Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__getColor", new Object[] {plugin,
+           result = Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__getColor", new Object[] {plugin,
                arg0
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -157,9 +159,9 @@ public class ExtendableConfiguration implements Configuration {
 	public org.bukkit.Color getColor(java.lang.String arg0, org.bukkit.Color arg1) {
        Object result = null;
        try {
-           result = Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__getColor", new Object[] {plugin,
+           result = Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__getColor", new Object[] {plugin,
                arg0, arg1
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -170,9 +172,9 @@ public class ExtendableConfiguration implements Configuration {
 	public org.bukkit.inventory.ItemStack getItemStack(java.lang.String arg0, org.bukkit.inventory.ItemStack arg1) {
        Object result = null;
        try {
-           result = Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__getItemStack", new Object[] {plugin,
+           result = Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__getItemStack", new Object[] {plugin,
                arg0, arg1
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -183,9 +185,9 @@ public class ExtendableConfiguration implements Configuration {
 	public org.bukkit.inventory.ItemStack getItemStack(java.lang.String arg0) {
        Object result = null;
        try {
-           result = Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__getItemStack", new Object[] {plugin,
+           result = Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__getItemStack", new Object[] {plugin,
                arg0
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -196,9 +198,9 @@ public class ExtendableConfiguration implements Configuration {
 	public org.bukkit.OfflinePlayer getOfflinePlayer(java.lang.String arg0) {
        Object result = null;
        try {
-           result = Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__getOfflinePlayer", new Object[] {plugin,
+           result = Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__getOfflinePlayer", new Object[] {plugin,
                arg0
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -209,9 +211,9 @@ public class ExtendableConfiguration implements Configuration {
 	public org.bukkit.OfflinePlayer getOfflinePlayer(java.lang.String arg0, org.bukkit.OfflinePlayer arg1) {
        Object result = null;
        try {
-           result = Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__getOfflinePlayer", new Object[] {plugin,
+           result = Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__getOfflinePlayer", new Object[] {plugin,
                arg0, arg1
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -222,9 +224,9 @@ public class ExtendableConfiguration implements Configuration {
 	public java.util.Map<java.lang.String, java.lang.Object> getValues(boolean arg0) {
        Object result = null;
        try {
-           result = Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__getValues", new Object[] {plugin,
+           result = Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__getValues", new Object[] {plugin,
                arg0
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -235,9 +237,9 @@ public class ExtendableConfiguration implements Configuration {
 	public org.bukkit.configuration.ConfigurationSection getDefaultSection() {
        Object result = null;
        try {
-           result = Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__getDefaultSection", new Object[] {plugin,
+           result = Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__getDefaultSection", new Object[] {plugin,
                
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -248,9 +250,9 @@ public class ExtendableConfiguration implements Configuration {
 	public java.lang.String getCurrentPath() {
        Object result = null;
        try {
-           result = Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__getCurrentPath", new Object[] {plugin,
+           result = Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__getCurrentPath", new Object[] {plugin,
                
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -261,9 +263,9 @@ public class ExtendableConfiguration implements Configuration {
 	public boolean isConfigurationSection(java.lang.String arg0) {
        Object result = null;
        try {
-           result = Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__isConfigurationSection", new Object[] {plugin,
+           result = Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__isConfigurationSection", new Object[] {plugin,
                arg0
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -274,9 +276,9 @@ public class ExtendableConfiguration implements Configuration {
 	public org.bukkit.configuration.ConfigurationSection getConfigurationSection(java.lang.String arg0) {
        Object result = null;
        try {
-           result = Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__getConfigurationSection", new Object[] {plugin,
+           result = Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__getConfigurationSection", new Object[] {plugin,
                arg0
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -287,9 +289,9 @@ public class ExtendableConfiguration implements Configuration {
 	public org.bukkit.configuration.ConfigurationSection createSection(java.lang.String arg0) {
        Object result = null;
        try {
-           result = Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__createSection", new Object[] {plugin,
+           result = Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__createSection", new Object[] {plugin,
                arg0
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -300,9 +302,9 @@ public class ExtendableConfiguration implements Configuration {
 	public org.bukkit.configuration.ConfigurationSection createSection(java.lang.String arg0, java.util.Map<?,?> arg1) {
        Object result = null;
        try {
-           result = Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__createSection", new Object[] {plugin,
+           result = Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__createSection", new Object[] {plugin,
                arg0, arg1
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -313,9 +315,9 @@ public class ExtendableConfiguration implements Configuration {
 	public boolean isString(java.lang.String arg0) {
        Object result = null;
        try {
-           result = Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__isString", new Object[] {plugin,
+           result = Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__isString", new Object[] {plugin,
                arg0
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -326,9 +328,9 @@ public class ExtendableConfiguration implements Configuration {
 	public boolean isInt(java.lang.String arg0) {
        Object result = null;
        try {
-           result = Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__isInt", new Object[] {plugin,
+           result = Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__isInt", new Object[] {plugin,
                arg0
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -339,9 +341,9 @@ public class ExtendableConfiguration implements Configuration {
 	public boolean isBoolean(java.lang.String arg0) {
        Object result = null;
        try {
-           result = Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__isBoolean", new Object[] {plugin,
+           result = Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__isBoolean", new Object[] {plugin,
                arg0
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -352,9 +354,9 @@ public class ExtendableConfiguration implements Configuration {
 	public boolean isDouble(java.lang.String arg0) {
        Object result = null;
        try {
-           result = Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__isDouble", new Object[] {plugin,
+           result = Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__isDouble", new Object[] {plugin,
                arg0
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -365,9 +367,9 @@ public class ExtendableConfiguration implements Configuration {
 	public boolean isLong(java.lang.String arg0) {
        Object result = null;
        try {
-           result = Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__isLong", new Object[] {plugin,
+           result = Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__isLong", new Object[] {plugin,
                arg0
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -378,9 +380,9 @@ public class ExtendableConfiguration implements Configuration {
 	public java.util.List<?> getList(java.lang.String arg0) {
        Object result = null;
        try {
-           result = Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__getList", new Object[] {plugin,
+           result = Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__getList", new Object[] {plugin,
                arg0
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -391,9 +393,9 @@ public class ExtendableConfiguration implements Configuration {
 	public java.util.List<?> getList(java.lang.String arg0, java.util.List<?> arg1) {
        Object result = null;
        try {
-           result = Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__getList", new Object[] {plugin,
+           result = Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__getList", new Object[] {plugin,
                arg0, arg1
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -404,9 +406,9 @@ public class ExtendableConfiguration implements Configuration {
 	public boolean isList(java.lang.String arg0) {
        Object result = null;
        try {
-           result = Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__isList", new Object[] {plugin,
+           result = Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__isList", new Object[] {plugin,
                arg0
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -417,9 +419,9 @@ public class ExtendableConfiguration implements Configuration {
 	public java.util.List<java.lang.String> getStringList(java.lang.String arg0) {
        Object result = null;
        try {
-           result = Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__getStringList", new Object[] {plugin,
+           result = Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__getStringList", new Object[] {plugin,
                arg0
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -430,9 +432,9 @@ public class ExtendableConfiguration implements Configuration {
 	public java.util.List<java.lang.Integer> getIntegerList(java.lang.String arg0) {
        Object result = null;
        try {
-           result = Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__getIntegerList", new Object[] {plugin,
+           result = Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__getIntegerList", new Object[] {plugin,
                arg0
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -443,9 +445,9 @@ public class ExtendableConfiguration implements Configuration {
 	public java.util.List<java.lang.Boolean> getBooleanList(java.lang.String arg0) {
        Object result = null;
        try {
-           result = Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__getBooleanList", new Object[] {plugin,
+           result = Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__getBooleanList", new Object[] {plugin,
                arg0
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -456,9 +458,9 @@ public class ExtendableConfiguration implements Configuration {
 	public java.util.List<java.lang.Double> getDoubleList(java.lang.String arg0) {
        Object result = null;
        try {
-           result = Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__getDoubleList", new Object[] {plugin,
+           result = Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__getDoubleList", new Object[] {plugin,
                arg0
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -469,9 +471,9 @@ public class ExtendableConfiguration implements Configuration {
 	public java.util.List<java.lang.Float> getFloatList(java.lang.String arg0) {
        Object result = null;
        try {
-           result = Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__getFloatList", new Object[] {plugin,
+           result = Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__getFloatList", new Object[] {plugin,
                arg0
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -482,9 +484,9 @@ public class ExtendableConfiguration implements Configuration {
 	public java.util.List<java.lang.Long> getLongList(java.lang.String arg0) {
        Object result = null;
        try {
-           result = Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__getLongList", new Object[] {plugin,
+           result = Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__getLongList", new Object[] {plugin,
                arg0
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -495,9 +497,9 @@ public class ExtendableConfiguration implements Configuration {
 	public java.util.List<java.lang.Byte> getByteList(java.lang.String arg0) {
        Object result = null;
        try {
-           result = Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__getByteList", new Object[] {plugin,
+           result = Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__getByteList", new Object[] {plugin,
                arg0
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -508,9 +510,9 @@ public class ExtendableConfiguration implements Configuration {
 	public java.util.List<java.lang.Character> getCharacterList(java.lang.String arg0) {
        Object result = null;
        try {
-           result = Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__getCharacterList", new Object[] {plugin,
+           result = Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__getCharacterList", new Object[] {plugin,
                arg0
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -521,9 +523,9 @@ public class ExtendableConfiguration implements Configuration {
 	public java.util.List<java.lang.Short> getShortList(java.lang.String arg0) {
        Object result = null;
        try {
-           result = Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__getShortList", new Object[] {plugin,
+           result = Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__getShortList", new Object[] {plugin,
                arg0
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -534,9 +536,9 @@ public class ExtendableConfiguration implements Configuration {
 	public java.util.List<java.util.Map<?, ?>> getMapList(java.lang.String arg0) {
        Object result = null;
        try {
-           result = Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__getMapList", new Object[] {plugin,
+           result = Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__getMapList", new Object[] {plugin,
                arg0
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -547,9 +549,9 @@ public class ExtendableConfiguration implements Configuration {
 	public ConfigurationSerializable getSerializable(java.lang.String arg0, java.lang.Class arg1, org.bukkit.configuration.serialization.ConfigurationSerializable arg2) {
        Object result = null;
        try {
-           result = Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__getSerializable", new Object[] {plugin,
+           result = Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__getSerializable", new Object[] {plugin,
                arg0, arg1, arg2
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -560,9 +562,9 @@ public class ExtendableConfiguration implements Configuration {
 	public org.bukkit.configuration.serialization.ConfigurationSerializable getSerializable(java.lang.String arg0, java.lang.Class arg1) {
        Object result = null;
        try {
-           result = Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__getSerializable", new Object[] {plugin,
+           result = Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__getSerializable", new Object[] {plugin,
                arg0, arg1
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -573,9 +575,9 @@ public class ExtendableConfiguration implements Configuration {
 	public org.bukkit.util.Vector getVector(java.lang.String arg0) {
        Object result = null;
        try {
-           result = Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__getVector", new Object[] {plugin,
+           result = Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__getVector", new Object[] {plugin,
                arg0
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -586,9 +588,9 @@ public class ExtendableConfiguration implements Configuration {
 	public org.bukkit.util.Vector getVector(java.lang.String arg0, org.bukkit.util.Vector arg1) {
        Object result = null;
        try {
-           result = Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__getVector", new Object[] {plugin,
+           result = Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__getVector", new Object[] {plugin,
                arg0, arg1
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -599,9 +601,9 @@ public class ExtendableConfiguration implements Configuration {
 	public boolean isVector(java.lang.String arg0) {
        Object result = null;
        try {
-           result = Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__isVector", new Object[] {plugin,
+           result = Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__isVector", new Object[] {plugin,
                arg0
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -612,9 +614,9 @@ public class ExtendableConfiguration implements Configuration {
 	public boolean isOfflinePlayer(java.lang.String arg0) {
        Object result = null;
        try {
-           result = Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__isOfflinePlayer", new Object[] {plugin,
+           result = Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__isOfflinePlayer", new Object[] {plugin,
                arg0
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -625,9 +627,9 @@ public class ExtendableConfiguration implements Configuration {
 	public boolean isItemStack(java.lang.String arg0) {
        Object result = null;
        try {
-           result = Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__isItemStack", new Object[] {plugin,
+           result = Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__isItemStack", new Object[] {plugin,
                arg0
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -638,9 +640,9 @@ public class ExtendableConfiguration implements Configuration {
 	public boolean isColor(java.lang.String arg0) {
        Object result = null;
        try {
-           result = Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__isColor", new Object[] {plugin,
+           result = Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__isColor", new Object[] {plugin,
                arg0
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -651,9 +653,9 @@ public class ExtendableConfiguration implements Configuration {
 	public boolean isLocation(java.lang.String arg0) {
        Object result = null;
        try {
-           result = Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__isLocation", new Object[] {plugin,
+           result = Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__isLocation", new Object[] {plugin,
                arg0
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -664,9 +666,9 @@ public class ExtendableConfiguration implements Configuration {
 	public java.util.List<java.lang.String> getComments(java.lang.String arg0) {
        Object result = null;
        try {
-           result = Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__getComments", new Object[] {plugin,
+           result = Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__getComments", new Object[] {plugin,
                arg0
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -677,9 +679,9 @@ public class ExtendableConfiguration implements Configuration {
 	public java.util.List<java.lang.String> getInlineComments(java.lang.String arg0) {
        Object result = null;
        try {
-           result = Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__getInlineComments", new Object[] {plugin,
+           result = Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__getInlineComments", new Object[] {plugin,
                arg0
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -690,9 +692,9 @@ public class ExtendableConfiguration implements Configuration {
 	public void setComments(java.lang.String arg0, java.util.List arg1) {
        Object result = null;
        try {
-           result = Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__setComments", new Object[] {plugin,
+           result = Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__setComments", new Object[] {plugin,
                arg0, arg1
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -702,9 +704,9 @@ public class ExtendableConfiguration implements Configuration {
 	public void setInlineComments(java.lang.String arg0, java.util.List<String> arg1) {
        Object result = null;
        try {
-           result = Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__setInlineComments", new Object[] {plugin,
+           result = Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__setInlineComments", new Object[] {plugin,
                arg0, arg1
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -714,9 +716,9 @@ public class ExtendableConfiguration implements Configuration {
 	public java.lang.String getName() {
        Object result = null;
        try {
-           result = Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__getName", new Object[] {plugin,
+           result = Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__getName", new Object[] {plugin,
                
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -727,9 +729,9 @@ public class ExtendableConfiguration implements Configuration {
 	public java.lang.Object get(java.lang.String arg0, java.lang.Object arg1) {
        Object result = null;
        try {
-           result = Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__get", new Object[] {plugin,
+           result = Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__get", new Object[] {plugin,
                arg0, arg1
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -740,9 +742,9 @@ public class ExtendableConfiguration implements Configuration {
 	public java.lang.Object get(java.lang.String arg0) {
        Object result = null;
        try {
-           result = Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__get", new Object[] {plugin,
+           result = Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__get", new Object[] {plugin,
                arg0
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -753,9 +755,9 @@ public class ExtendableConfiguration implements Configuration {
 	public boolean getBoolean(java.lang.String arg0, boolean arg1) {
        Object result = null;
        try {
-           result = Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__getBoolean", new Object[] {plugin,
+           result = Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__getBoolean", new Object[] {plugin,
                arg0, arg1
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -766,9 +768,9 @@ public class ExtendableConfiguration implements Configuration {
 	public boolean getBoolean(java.lang.String arg0) {
        Object result = null;
        try {
-           result = Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__getBoolean", new Object[] {plugin,
+           result = Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__getBoolean", new Object[] {plugin,
                arg0
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -779,9 +781,9 @@ public class ExtendableConfiguration implements Configuration {
 	public int getInt(java.lang.String arg0, int arg1) {
        Object result = null;
        try {
-           result = Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__getInt", new Object[] {plugin,
+           result = Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__getInt", new Object[] {plugin,
                arg0, arg1
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -792,9 +794,9 @@ public class ExtendableConfiguration implements Configuration {
 	public int getInt(java.lang.String arg0) {
        Object result = null;
        try {
-           result = Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__getInt", new Object[] {plugin,
+           result = Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__getInt", new Object[] {plugin,
                arg0
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -805,9 +807,9 @@ public class ExtendableConfiguration implements Configuration {
 	public long getLong(java.lang.String arg0, long arg1) {
        Object result = null;
        try {
-           result = Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__getLong", new Object[] {plugin,
+           result = Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__getLong", new Object[] {plugin,
                arg0, arg1
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -818,9 +820,9 @@ public class ExtendableConfiguration implements Configuration {
 	public long getLong(java.lang.String arg0) {
        Object result = null;
        try {
-           result = Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__getLong", new Object[] {plugin,
+           result = Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__getLong", new Object[] {plugin,
                arg0
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -831,9 +833,9 @@ public class ExtendableConfiguration implements Configuration {
 	public double getDouble(java.lang.String arg0, double arg1) {
        Object result = null;
        try {
-           result = Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__getDouble", new Object[] {plugin,
+           result = Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__getDouble", new Object[] {plugin,
                arg0, arg1
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -844,9 +846,9 @@ public class ExtendableConfiguration implements Configuration {
 	public double getDouble(java.lang.String arg0) {
        Object result = null;
        try {
-           result = Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__getDouble", new Object[] {plugin,
+           result = Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__getDouble", new Object[] {plugin,
                arg0
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -857,9 +859,9 @@ public class ExtendableConfiguration implements Configuration {
 	public boolean contains(java.lang.String arg0) {
        Object result = null;
        try {
-           result = Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__contains", new Object[] {plugin,
+           result = Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__contains", new Object[] {plugin,
                arg0
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -870,9 +872,9 @@ public class ExtendableConfiguration implements Configuration {
 	public boolean contains(java.lang.String arg0, boolean arg1) {
        Object result = null;
        try {
-           result = Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__contains", new Object[] {plugin,
+           result = Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__contains", new Object[] {plugin,
                arg0, arg1
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -883,9 +885,9 @@ public class ExtendableConfiguration implements Configuration {
 	public org.bukkit.Location getLocation(java.lang.String arg0, org.bukkit.Location arg1) {
        Object result = null;
        try {
-           result = Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__getLocation", new Object[] {plugin,
+           result = Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__getLocation", new Object[] {plugin,
                arg0, arg1
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -896,9 +898,9 @@ public class ExtendableConfiguration implements Configuration {
 	public org.bukkit.Location getLocation(java.lang.String arg0) {
        Object result = null;
        try {
-           result = Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__getLocation", new Object[] {plugin,
+           result = Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__getLocation", new Object[] {plugin,
                arg0
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -909,9 +911,9 @@ public class ExtendableConfiguration implements Configuration {
 	public org.bukkit.configuration.ConfigurationSection getParent() {
        Object result = null;
        try {
-           result = Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__getParent", new Object[] {plugin,
+           result = Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__getParent", new Object[] {plugin,
                
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -922,9 +924,9 @@ public class ExtendableConfiguration implements Configuration {
 	public void set(java.lang.String arg0, java.lang.Object arg1) {
        Object result = null;
        try {
-           result = Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__set", new Object[] {plugin,
+           result = Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__set", new Object[] {plugin,
                arg0, arg1
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -934,9 +936,9 @@ public class ExtendableConfiguration implements Configuration {
 	public boolean isSet(java.lang.String arg0) {
        Object result = null;
        try {
-           result = Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__isSet", new Object[] {plugin,
+           result = Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__isSet", new Object[] {plugin,
                arg0
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -947,9 +949,9 @@ public class ExtendableConfiguration implements Configuration {
 	public org.bukkit.configuration.Configuration getRoot() {
        Object result = null;
        try {
-           result = Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__getRoot", new Object[] {plugin,
+           result = Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__getRoot", new Object[] {plugin,
                
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -960,9 +962,9 @@ public class ExtendableConfiguration implements Configuration {
 	public java.lang.Object getObject(java.lang.String arg0, java.lang.Class arg1, java.lang.Object arg2) {
        Object result = null;
        try {
-           result = Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__getObject", new Object[] {plugin,
+           result = Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__getObject", new Object[] {plugin,
                arg0, arg1, arg2
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
@@ -973,9 +975,9 @@ public class ExtendableConfiguration implements Configuration {
 	public java.lang.Object getObject(java.lang.String arg0, java.lang.Class arg1) {
        Object result = null;
        try {
-           result = Native.execute(this.inLibName, "__extends__Configuration__"+this.name+"__getObject", new Object[] {plugin,
+           result = Misc.tryExecute(this.inLibName, "Configuration"+this.name+"__getObject", new Object[] {plugin,
                arg0, arg1
-           });
+           },});
        } catch(Exception ex) {
            ex.printStackTrace();
            this.blackBox.getLogger().severe("The fact that an error was thrown at this stage indicates a severe error. Assuming the plugin can no longer run safely, it is being shut off.");
