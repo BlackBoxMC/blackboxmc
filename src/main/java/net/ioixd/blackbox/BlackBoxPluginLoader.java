@@ -35,7 +35,7 @@ public final class BlackBoxPluginLoader implements PluginLoader {
     private boolean wasm = false;
 
     public static final Pattern[] fileFilters = new Pattern[] {
-            Pattern.compile("^((.*)\\" + getFileExtension() + "|\\.wasm)$") };
+            Pattern.compile("^(.*)(\\" + getFileExtension() + "|\\.wasm)$") };
 
     public BlackBoxPluginLoader(@NotNull Server instance) {
         Preconditions.checkArgument(instance != null, "Server cannot be null");
@@ -60,6 +60,7 @@ public final class BlackBoxPluginLoader implements PluginLoader {
             return null;
         }
 
+        System.out.println(file.getName() + " is wasm: " + file.getName().endsWith(".wasm"));
         if (file.getName().endsWith(".wasm")) {
             this.wasm = true;
         }

@@ -2,7 +2,10 @@ pub mod loader;
 pub mod shared;
 pub mod wasm;
 
-use std::{error::Error, fmt::Display};
+use std::{
+    error::Error,
+    fmt::{Debug, Display},
+};
 
 use jni::{
     objects::{JObject, JString},
@@ -25,7 +28,7 @@ pub extern "system" fn Java_net_ioixd_blackbox_Native_loadPlugin<'a>(
         .unwrap()
         .to_string_lossy()
         .to_string();
-    if wasm == 1 {
+    if wasm == jni::sys::JNI_TRUE {
         WASMLoader::load_plugin(env, file)
     } else {
         SharedLoader::load_plugin(env, file)
@@ -44,7 +47,7 @@ pub extern "system" fn Java_net_ioixd_blackbox_Native_enablePlugin<'a>(
         .unwrap()
         .to_string_lossy()
         .to_string();
-    if wasm == 1 {
+    if wasm == jni::sys::JNI_TRUE {
         WASMLoader::enable_plugin(file)
     } else {
         SharedLoader::enable_plugin(file)
@@ -63,7 +66,7 @@ pub extern "system" fn Java_net_ioixd_blackbox_Native_disablePlugin<'a>(
         .unwrap()
         .to_string_lossy()
         .to_string();
-    if wasm == 1 {
+    if wasm == jni::sys::JNI_TRUE {
         WASMLoader::disable_plugin(file)
     } else {
         SharedLoader::disable_plugin(file)
@@ -76,7 +79,7 @@ pub extern "system" fn Java_net_ioixd_blackbox_Native_libraryNames<'a>(
     _obj: JObject,
     wasm: jboolean,
 ) -> JString<'a> {
-    if wasm == 1 {
+    if wasm == jni::sys::JNI_TRUE {
         WASMLoader::library_names(env)
     } else {
         SharedLoader::library_names(env)
@@ -100,7 +103,7 @@ pub extern "system" fn Java_net_ioixd_blackbox_Native_libraryHasFunction<'a>(
         .to_string_lossy()
         .to_string();
 
-    if wasm == 1 {
+    if wasm == jni::sys::JNI_TRUE {
         WASMLoader::library_has_function(env, libname, funcname).into()
     } else {
         SharedLoader::library_has_function(env, libname, funcname).into()
@@ -124,7 +127,7 @@ pub extern "system" fn Java_net_ioixd_blackbox_Native_sendEvent<'a>(
     let funcname = unwrap_result_or_java_error(&mut env, &libname, funcname_raw)
         .to_string_lossy()
         .to_string();
-    if wasm == 1 {
+    if wasm == jni::sys::JNI_TRUE {
         WASMLoader::send_event(env, libname, funcname, ev).into()
     } else {
         SharedLoader::send_event(env, libname, funcname, ev).into()
@@ -151,7 +154,7 @@ pub extern "system" fn Java_net_ioixd_blackbox_Native_execute<'a>(
         .to_string_lossy()
         .to_string();
 
-    if wasm == 1 {
+    if wasm == jni::sys::JNI_TRUE {
         WASMLoader::execute(env, libname, funcname, address, plugin, ev)
     } else {
         SharedLoader::execute(env, libname, funcname, address, plugin, ev)
@@ -167,7 +170,7 @@ pub extern "system" fn Java_net_ioixd_blackbox_BiConsumerLink_acceptNative<'a>(
     obj2: JObject,
     wasm: jboolean,
 ) {
-    if wasm == 1 {
+    if wasm == jni::sys::JNI_TRUE {
         throw_with_error(
             &mut env,
             "java/lang/UnsupportedOperationException",
@@ -196,6 +199,26 @@ pub fn unwrap_result_or_java_error<V, E, S>(
 where
     S: Into<String> + Display,
     E: Error,
+{
+    match opt {
+        Ok(v) => v,
+        Err(err) => {
+            throw_with_error(
+                &mut env,
+                "net/ioixd/blackbox/exceptions/NativeLibrarySymbolLoadException",
+                format!("error with {}: {:?}", &libname, err),
+            );
+            unreachable!();
+        }
+    }
+}
+pub fn unwrap_wasm_result_or_java_error<V, S>(
+    mut env: &mut JNIEnv,
+    libname: S,
+    opt: Result<V, wasmtime::Error>,
+) -> V
+where
+    S: Into<String> + Display,
 {
     match opt {
         Ok(v) => v,
@@ -287,4 +310,5 @@ pub fn throw_with_error(
     if let Err(_) = er {
         env.exception_describe().unwrap();
     }
+    env.exception_describe().unwrap();
 }
