@@ -24,6 +24,8 @@ import org.bukkit.plugin.PluginLoader;
 import org.bukkit.plugin.RegisteredListener;
 import org.jetbrains.annotations.NotNull;
 
+import net.ioixd.blackbox.Native;
+
 /**
  * Represents a BlackBox plugin loader, allowing plugins in the form of .dll,
  * .so, and .wasm
@@ -65,8 +67,18 @@ public final class BlackBoxPluginLoader implements PluginLoader {
             this.wasm = true;
         }
 
-        Native.loadPlugin(library, this.wasm);
-
+        // Native.loadPlugin randomly gives a null pointer execption on every version of
+        // the plugin I've ever made, no matter what.
+        try {
+            // Getting the class manually
+            Class<?> cls = Class.forName("net.ioixd.blackbox.Native");
+            // Getting the method manually
+            Method kill = cls.getMethod("loadPlugin", String.class, boolean.class);
+            // Calling the method manually.
+            kill.invoke(null, library, this.wasm);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         server.getLogger().info("Loading native plugin " + libraryName);
 
         BlackBoxPlugin plugin = new BlackBoxPlugin(libraryName,
